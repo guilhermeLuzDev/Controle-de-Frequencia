@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Administrador</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <h2>Dashboard</h2>
+      <ul class="sidebar-menu">
+        <li>Cadastro de Bolsistas</li>
+        <li>Cadastro de Orientadores</li>
+        <li>Cadastro de Bolsas</li>
+        <li>Bolsistas</li>
+        <li>Orientadores</li>
+        <li>Bolsas</li>
+        <li>Sair</li>
+      </ul>
+    </div>
+    
+    <div class="content">
+      <div class="content-header">
+        <h1>Painel do Administrador</h1>
+        <button class="btn-green">+ Nova Bolsa</button>
+      </div>
+      
+      <div class="card">
+        <h2 class="card-title">Programas Recentes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome dos Programas</th>
+              <th>Orientador vinculado</th>
+              <th>Status do programa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Partiu IF</td>
+              <td>Prof. Jardas</td>
+              <td>Ativo</td>
+            </tr>
+            <tr>
+              <td>PIBIC</td>
+              <td>Prof. Diego</td>
+              <td>Ativo</td>
+            </tr>
+            <tr>
+              <td>PIBEX</td>
+              <td>Prof. Josefa</td>
+              <td>Ativo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="card-link">
+        <h2>Bolsistas Vinculados</h2>
+        <span>&gt;</span>
+      </div>
+      
+      <div class="card-link">
+        <h2>Orientadores Vinculados</h2>
+        <span>&gt;</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
