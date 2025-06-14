@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Aluno</title>
+  <title>Frequência</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,50 +13,40 @@
     <a href="professor.html">Professor</a> |
     <a href="login.html">Login</a>
   </nav>
-  
   <div class="dashboard-container">
     <div class="sidebar">
       <h2>Dashboard</h2>
       <ul class="sidebar-menu">
+        <li><a href="aluno.html">Início</a></li>
         <li><a href="cadastro-relatorios.html">Cadastro de Relatórios</a></li>
         <li><a href="frequencia-aluno.html">Frequência</a></li>
         <li><a href="login.html">Sair</a></li>
       </ul>
     </div>
-    
     <div class="content">
       <div class="content-header">
-        <h1>Bem-vindo, Hérik Thiury!</h1>
+        <h1>Frequência</h1>
       </div>
-      
-      <div class="info-cards">
-        <div class="info-card">
-          <p>Nome do programa</p>
-          <h3>Partiu IF</h3>
-        </div>
-        
-        <div class="info-card">
-          <p>Status da Bolsa</p>
-          <h3>Ativo</h3>
-        </div>
-      </div>
-      
-      <div class="card-link">
-        <div>
-          <p>Orientador</p>
-          <h2>Prof. Jarbas</h2>
-        </div>
-        <span>&gt;</span>
-      </div>
-      
       <div class="card">
-        <h2 class="card-title">Enviar Relatório</h2>
-        
-        <div class="file-upload">
-          <div class="file-icon"></div>
-          <div class="file-name">nome_do_arquivo.pdf</div>
-          <button class="accept-button">Aceitar</button>
-        </div>
+        <h2 class="card-title">Minhas Frequências</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10/06/2025</td>
+              <td>Presente</td>
+            </tr>
+            <tr>
+              <td>09/06/2025</td>
+              <td>Faltou</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

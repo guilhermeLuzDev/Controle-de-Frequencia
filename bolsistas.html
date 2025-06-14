@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Administrador</title>
+  <title>Bolsistas</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,12 +13,11 @@
     <a href="professor.html">Professor</a> |
     <a href="login.html">Login</a>
   </nav>
-  
   <div class="dashboard-container">
     <div class="sidebar">
       <h2>Dashboard</h2>
       <ul class="sidebar-menu">
-        <li><a href="cadastro-bolsista.html">Cadastro de Bolsistas</a></li>
+        <li><a href="admin.html">Início</a></li>
         <li><a href="cadastro-orientadores.html">Cadastro de Orientadores</a></li>
         <li><a href="cadastro-bolsas.html">Cadastro de Bolsas</a></li>
         <li><a href="bolsistas.html">Bolsistas</a></li>
@@ -27,51 +26,33 @@
         <li><a href="login.html">Sair</a></li>
       </ul>
     </div>
-    
     <div class="content">
       <div class="content-header">
-        <h1>Painel do Administrador</h1>
-        <button class="btn-green">+ Nova Bolsa</button>
+        <h1>Bolsistas</h1>
       </div>
-      
       <div class="card">
-        <h2 class="card-title">Programas Recentes</h2>
+        <h2 class="card-title">Lista de Bolsistas</h2>
         <table>
           <thead>
             <tr>
-              <th>Nome dos Programas</th>
-              <th>Orientador vinculado</th>
-              <th>Status do programa</th>
+              <th>Nome</th>
+              <th>Curso</th>
+              <th>Bolsa</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Partiu IF</td>
-              <td>Prof. Jardas</td>
-              <td>Ativo</td>
+              <td>Guilherme Luz</td>
+              <td>Informática para Internet</td>
+              <td>PIBID</td>
             </tr>
             <tr>
-              <td>PIBIC</td>
-              <td>Prof. Diego</td>
-              <td>Ativo</td>
-            </tr>
-            <tr>
-              <td>PIBEX</td>
-              <td>Prof. Josefa</td>
-              <td>Ativo</td>
+              <td>Hérik Thiury</td>
+              <td>Qualidade</td>
+              <td>Monitoria</td>
             </tr>
           </tbody>
         </table>
-      </div>
-      
-      <div class="card-link">
-        <h2>Bolsistas Vinculados</h2>
-        <span>&gt;</span>
-      </div>
-      
-      <div class="card-link">
-        <h2>Orientadores Vinculados</h2>
-        <span>&gt;</span>
       </div>
     </div>
   </div>
