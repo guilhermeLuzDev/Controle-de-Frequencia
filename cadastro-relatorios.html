@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Relatórios</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a href="admin.html">Admin</a> |
+    <a href="aluno.html">Aluno</a> |
+    <a href="professor.html">Professor</a> |
+    <a href="login.html">Login</a>
+  </nav>
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <h2>Dashboard</h2>
+      <ul class="sidebar-menu">
+        <li><a href="aluno.html">Início</a></li>
+        <li><a href="cadastro-relatorios.html">Cadastro de Relatórios</a></li>
+        <li><a href="frequencia-aluno.html">Frequência</a></li>
+        <li><a href="login.html">Sair</a></li>
+      </ul>
+    </div>
+    <div class="content">
+      <div class="content-header">
+        <h1>Cadastro de Relatórios</h1>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Enviar Relatório</h2>
+        <form>
+          <div class="form-group">
+            <label for="arquivo">Arquivo:</label>
+            <input type="file" id="arquivo" name="arquivo" required>
+          </div>
+          <button type="submit" class="btn-green">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
