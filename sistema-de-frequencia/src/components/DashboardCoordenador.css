@@ -1,0 +1,116 @@
+.dashboard-container {
+  display: flex;
+}
+
+.menu-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  margin-left: 80px;
+  padding: 20px;
+  width: 100%;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.subtitulo {
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.tabela-programas {
+  background-color: #f3f3f3;
+  padding: 20px;
+  border-radius: 8px;
+  width: fit-content;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-programas table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tabela-programas th,
+.tabela-programas td {
+  padding: 8px 16px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.nova-bolsa {
+  background-color: #2e7d32;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-left: 24px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.acoes {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.botao {
+  background-color: white;
+  color: #2e7d32;
+  padding: 10px 20px;
+  border: 2px solid #2e7d32;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.abas-coordenador {
+  margin-top: 30px;
+}
+
+.aba {
+  margin-bottom: 20px;
+}
+
+.aba button {
+  background-color: #2e7d32;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.subtabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: #f9f9f9;
+}
+
+.subtabela th, .subtabela td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.lista-orientadores {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.lista-orientadores li {
+  margin-bottom: 8px;
+}
+

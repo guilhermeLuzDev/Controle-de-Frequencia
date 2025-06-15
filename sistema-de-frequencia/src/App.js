@@ -1,12 +1,8 @@
 import React from 'react';
-import LoginForm from './components/LoginForm';
+import DashboardCoordenador from './components/DashboardCoordenador';
 
 function App() {
-  return (
-    <div className="App">
-      <LoginForm />
-    </div>
-  );
+  return <DashboardCoordenador />;
 }
 
 export default App;
