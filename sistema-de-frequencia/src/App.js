@@ -1,8 +1,8 @@
 import React from 'react';
-import DashboardCoordenador from './components/DashboardCoordenador';
+import DashboardProfessor from './components/DashboardProfessor';
 
 function App() {
-  return <DashboardCoordenador />;
+  return <DashboardProfessor />;
 }
 
 export default App;

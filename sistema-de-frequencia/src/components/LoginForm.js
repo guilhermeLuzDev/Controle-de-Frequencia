@@ -16,7 +16,6 @@ function LoginForm() {
       return;
     }
 
-    // Simula login com sucesso
     setErro('');
     setLogado(true);
   };
