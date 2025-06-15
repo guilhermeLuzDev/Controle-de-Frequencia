@@ -30,7 +30,6 @@ function LoginForm() {
       <div className="login-container">
         <h2>Login bem-sucedido!</h2>
         <p>Redirecionando para o painel...</p>
-        {/* Simulação de redirecionamento */}
       </div>
     );
   }
