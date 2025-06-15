@@ -13,9 +13,10 @@
 }
 
 .content {
-  margin-left: 80px;
+  margin-left: 0;
   padding: 20px;
   width: 100%;
+  margin-left: 80px;
 }
 
 h2 {
@@ -34,6 +35,48 @@ h2 {
   border-radius: 8px;
   width: fit-content;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.anexar {
+  background-color: #2e7d32;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.progresso {
+  width: 100%;
+}
+
+.barra-externa {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  height: 30px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.barra-interna {
+  height: 100%;
+  background-color: #2e7d32;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  border-radius: 20px 0 0 20px;
+  transition: width 0.3s ease-in-out;
+}
+
+.botao {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .circulo-progresso {
@@ -87,14 +130,4 @@ h2 {
 .comunicados li {
   margin-bottom: 10px;
   line-height: 1.4;
-}
-
-.botao {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }

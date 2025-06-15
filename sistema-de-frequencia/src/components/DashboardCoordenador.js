@@ -1,14 +1,48 @@
+// src/components/DashboardCoordenador.js
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
 
 function DashboardCoordenador() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [mostrarBolsistas, setMostrarBolsistas] = useState(false);
-  const [mostrarOrientadores, setMostrarOrientadores] = useState(false);
+  const [bolsasAtivas, setBolsasAtivas] = useState({});
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
+
+const bolsas = [
+  {
+    id: 1,
+    nome: 'Partiu IF',
+    tipo: 'Monitoria',
+    professor: 'Prof. Jarbas',
+    bolsistas: [
+      { nome: 'Hérik Thiury', matricula: '20242TADS2-JG0069', status: 'Ativo', frequencia: 78 },
+      { nome: 'Maria do Carmo', matricula: '20242TADS2-MC0044', status: 'Inativo', frequencia: 55 },
+    ],
+  },
+  {
+    id: 2,
+    nome: 'PIBIC',
+    tipo: 'Pesquisa',
+    professor: 'Prof. Diego',
+    bolsistas: [
+      { nome: 'João Barbosa', matricula: '20242TADS2-JB0010', status: 'Ativo', frequencia: 92 },
+    ],
+  },
+  {
+    id: 3,
+    nome: 'Tutoria',
+    tipo: 'Tutoria de Pares',
+    professor: 'Prof. Josefa',
+    bolsistas: [],
+  },
+];
+
+
+  const toggleBolsa = (id) => {
+    setBolsasAtivas(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   return (
     <div className="dashboard-container">
@@ -16,66 +50,31 @@ function DashboardCoordenador() {
       <Sidebar visible={sidebarVisible} onClose={closeSidebar} />
 
       <div className="content">
-        <h2>Painel do Administrador</h2>
+        <h2>Visão Geral das Bolsas</h2>
 
-        <div className="tabela-programas">
-          <p className="subtitulo">Programas Recentes</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Nome dos Programas</th>
-                <th>Orientador vinculado</th>
-                <th>Status do programa</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Partiu IF</td><td>Prof. Jarbas</td><td>Ativo</td></tr>
-              <tr><td>PIBIC</td><td>Prof. Diego</td><td>Ativo</td></tr>
-              <tr><td>PIBEX</td><td>Prof. Josefa</td><td>Ativo</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div className="tabela-hierarquica">
+          {bolsas.map((bolsa) => (
+            <div key={bolsa.id} className="bloco-bolsa">
+              <button className="toggle-bolsa" onClick={() => toggleBolsa(bolsa.id)}>
+                {bolsasAtivas[bolsa.id] ? '▼' : '▶'} {bolsa.nome} ({bolsa.tipo}) — {bolsa.professor}
+              </button>
 
-        <div className="acoes">
-          <button className="nova-bolsa">+ Nova Bolsa</button>
-        </div>
-
-        {/* Abas expansíveis */}
-        <div className="abas-coordenador">
-          <div className="aba">
-            <button onClick={() => setMostrarBolsistas(!mostrarBolsistas)}>
-              {mostrarBolsistas ? '▼' : '▶'} Bolsistas Vinculados
-            </button>
-            {mostrarBolsistas && (
-              <table className="subtabela">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Matrícula</th>
-                    <th>Frequência</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>Hérik Thiury</td><td>20242TADS2-JG0069</td><td>90%</td></tr>
-                  <tr><td>Maria do Carmo</td><td>20242TADS2-MC0044</td><td>80%</td></tr>
-                  <tr><td>João Barbosa</td><td>20242TADS2-JB0010</td><td>95%</td></tr>
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          <div className="aba">
-            <button onClick={() => setMostrarOrientadores(!mostrarOrientadores)}>
-              {mostrarOrientadores ? '▼' : '▶'} Orientadores Vinculados
-            </button>
-            {mostrarOrientadores && (
-              <ul className="lista-orientadores">
-                <li>Prof. Jarbas</li>
-                <li>Prof. Diego</li>
-                <li>Prof. Josefa</li>
-              </ul>
-            )}
-          </div>
+              {bolsasAtivas[bolsa.id] && (
+                bolsa.bolsistas.length > 0 ? (
+                  <ul className="lista-bolsistas">
+                    {bolsa.bolsistas.map((b, i) => (
+                      <li key={i}>
+                        <strong>{b.nome}</strong> — {b.matricula} — 
+                        <span className={b.status === 'Ativo' ? 'ativo' : 'inativo'}> {b.status}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p style={{ paddingLeft: "20px", marginTop: "10px" }}>Nenhum bolsista vinculado.</p>
+                )
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

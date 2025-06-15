@@ -1,3 +1,4 @@
+// src/components/DashboardProfessor.js
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
@@ -5,6 +6,13 @@ import './DashboardProfessor.css';
 function DashboardProfessor() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [mostrarRelatorios, setMostrarRelatorios] = useState(false);
+  const [mostrarComunicados, setMostrarComunicados] = useState(false);
+
+  const [tituloComunicado, setTituloComunicado] = useState('');
+  const [mensagemComunicado, setMensagemComunicado] = useState('');
+  const [comunicados, setComunicados] = useState([
+    { titulo: 'Reunião geral', mensagem: 'Acontecerá dia 18/06 às 14h.' },
+  ]);
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
@@ -16,8 +24,8 @@ function DashboardProfessor() {
   ];
 
   const relatorios = [
-    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'Pendente!' },
-    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'Pendente!' },
+    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'pendente' },
+    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'pendente' },
   ];
 
   const aprovarRelatorio = (nome) => {
@@ -28,6 +36,19 @@ function DashboardProfessor() {
     alert(`Relatório de ${nome} reprovado.`);
   };
 
+  const enviarComunicado = (e) => {
+    e.preventDefault();
+    if (!tituloComunicado || !mensagemComunicado) return;
+
+    setComunicados(prev => [...prev, {
+      titulo: tituloComunicado,
+      mensagem: mensagemComunicado
+    }]);
+
+    setTituloComunicado('');
+    setMensagemComunicado('');
+  };
+
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
@@ -36,7 +57,7 @@ function DashboardProfessor() {
       <div className="content">
         <h2>Painel do Professor</h2>
 
-        
+        {/* Tabela de bolsistas */}
         <div className="tabela-programas">
           <p className="subtitulo">Bolsistas Vinculados</p>
           <table>
@@ -61,7 +82,7 @@ function DashboardProfessor() {
           </table>
         </div>
 
-       
+        {/* Aba: Relatórios */}
         <div className="aba">
           <button className="botao" onClick={() => setMostrarRelatorios(!mostrarRelatorios)}>
             {mostrarRelatorios ? '▼' : '▶'} Relatórios Enviados
@@ -91,6 +112,41 @@ function DashboardProfessor() {
                 ))}
               </tbody>
             </table>
+          )}
+        </div>
+
+        {/* Aba: Comunicados */}
+        <div className="aba">
+          <button className="botao" onClick={() => setMostrarComunicados(!mostrarComunicados)}>
+            {mostrarComunicados ? '▼' : '▶'} Comunicados
+          </button>
+
+          {mostrarComunicados && (
+            <div className="comunicado-form">
+              <form onSubmit={enviarComunicado}>
+                <input
+                  type="text"
+                  placeholder="Título"
+                  value={tituloComunicado}
+                  onChange={(e) => setTituloComunicado(e.target.value)}
+                />
+                <textarea
+                  placeholder="Mensagem"
+                  rows="3"
+                  value={mensagemComunicado}
+                  onChange={(e) => setMensagemComunicado(e.target.value)}
+                />
+                <button type="submit" className="botao-enviar">Enviar</button>
+              </form>
+
+              <ul className="lista-comunicados">
+                {comunicados.map((c, i) => (
+                  <li key={i}>
+                    <strong>{c.titulo}:</strong> {c.mensagem}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       </div>
