@@ -24,8 +24,8 @@ function DashboardProfessor() {
   ];
 
   const relatorios = [
-    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'pendente' },
-    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'pendente' },
+    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'Pendente!' },
+    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'Pendente!' },
   ];
 
   const aprovarRelatorio = (nome) => {
