@@ -20,7 +20,7 @@ function CadastroBolsista() {
     matricula: '',
     email: '',
     bolsa: '',
-    senha: '123456', // senha padrão
+    senha: '123456',
   });
 
   const handleChange = (e) => {
