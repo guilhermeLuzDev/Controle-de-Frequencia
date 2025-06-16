@@ -6,11 +6,14 @@ function DashboardCoordenador() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
   const [mostrarCadastroBolsa, setMostrarCadastroBolsa] = useState(false);
+  const [mostrarComunicados, setMostrarComunicados] = useState(false);
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
   const professores = ['Prof. Jarbas', 'Prof. Diego', 'Prof. Josefa'];
+
+  const [filtroProfessor, setFiltroProfessor] = useState('');
 
   const bolsas = [
     {
@@ -49,6 +52,15 @@ function DashboardCoordenador() {
     relatorio: ''
   });
 
+  const [comunicados, setComunicados] = useState([
+    { titulo: 'Entrega de Documentos', mensagem: 'Prazo até dia 20/06.' }
+  ]);
+
+  const [novoComunicado, setNovoComunicado] = useState({
+    titulo: '',
+    mensagem: ''
+  });
+
   const toggleBolsa = (id) => {
     setBolsasAtivas(prev => ({ ...prev, [id]: !prev[id] }));
   };
@@ -65,6 +77,17 @@ function DashboardCoordenador() {
     });
   };
 
+  const enviarComunicado = (e) => {
+    e.preventDefault();
+    if (!novoComunicado.titulo || !novoComunicado.mensagem) return;
+    setComunicados(prev => [...prev, novoComunicado]);
+    setNovoComunicado({ titulo: '', mensagem: '' });
+  };
+
+  const bolsasFiltradas = filtroProfessor
+    ? bolsas.filter(b => b.professor === filtroProfessor)
+    : bolsas;
+
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
@@ -73,8 +96,21 @@ function DashboardCoordenador() {
       <div className="content">
         <h2>Visão Geral das Bolsas</h2>
 
+        <div className="filtro">
+          <label>Filtrar por professor:</label>
+          <select
+            value={filtroProfessor}
+            onChange={(e) => setFiltroProfessor(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {professores.map((p, i) => (
+              <option key={i} value={p}>{p}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="tabela-hierarquica">
-          {bolsas.map((bolsa) => (
+          {bolsasFiltradas.map((bolsa) => (
             <div key={bolsa.id} className="bloco-bolsa">
               <button className="toggle-bolsa" onClick={() => toggleBolsa(bolsa.id)}>
                 {bolsasAtivas[bolsa.id] ? '▼' : '▶'} {bolsa.nome} ({bolsa.tipo}) — {bolsa.professor}
@@ -100,7 +136,6 @@ function DashboardCoordenador() {
           ))}
         </div>
 
-        {/* Aba: Cadastro de Nova Bolsa */}
         <div className="aba">
           <button className="botao" onClick={() => setMostrarCadastroBolsa(!mostrarCadastroBolsa)}>
             {mostrarCadastroBolsa ? '▼' : '▶'} Cadastrar Nova Bolsa
@@ -111,7 +146,6 @@ function DashboardCoordenador() {
               <label>Nome da Bolsa:</label>
               <input
                 type="text"
-                name="nome"
                 value={novaBolsa.nome}
                 onChange={(e) => setNovaBolsa({ ...novaBolsa, nome: e.target.value })}
                 required
@@ -119,7 +153,6 @@ function DashboardCoordenador() {
 
               <label>Tipo:</label>
               <select
-                name="tipo"
                 value={novaBolsa.tipo}
                 onChange={(e) => setNovaBolsa({ ...novaBolsa, tipo: e.target.value })}
                 required
@@ -133,7 +166,6 @@ function DashboardCoordenador() {
 
               <label>Professor Responsável:</label>
               <select
-                name="professor"
                 value={novaBolsa.professor}
                 onChange={(e) => setNovaBolsa({ ...novaBolsa, professor: e.target.value })}
                 required
@@ -147,7 +179,6 @@ function DashboardCoordenador() {
               <label>Carga Horária Total (h):</label>
               <input
                 type="number"
-                name="cargaHoraria"
                 value={novaBolsa.cargaHoraria}
                 onChange={(e) => setNovaBolsa({ ...novaBolsa, cargaHoraria: e.target.value })}
                 required
@@ -155,7 +186,6 @@ function DashboardCoordenador() {
 
               <label>Frequência da entrega de relatório:</label>
               <select
-                name="relatorio"
                 value={novaBolsa.relatorio}
                 onChange={(e) => setNovaBolsa({ ...novaBolsa, relatorio: e.target.value })}
                 required
@@ -169,6 +199,42 @@ function DashboardCoordenador() {
 
               <button type="submit" className="botao-enviar">Cadastrar Bolsa</button>
             </form>
+          )}
+        </div>
+
+        <div className="aba">
+          <button className="botao" onClick={() => setMostrarComunicados(!mostrarComunicados)}>
+            {mostrarComunicados ? '▼' : '▶'} Comunicados
+          </button>
+
+          {mostrarComunicados && (
+            <div className="comunicado-form">
+              <form onSubmit={enviarComunicado}>
+                <input
+                  type="text"
+                  placeholder="Título"
+                  value={novoComunicado.titulo}
+                  onChange={(e) => setNovoComunicado({ ...novoComunicado, titulo: e.target.value })}
+                  required
+                /><br/><br/>
+                <textarea
+                  placeholder="Mensagem"
+                  rows="3"
+                  value={novoComunicado.mensagem}
+                  onChange={(e) => setNovoComunicado({ ...novoComunicado, mensagem: e.target.value })}
+                  required
+                /> <br/> <br/>
+                <button type="submit" className="botao-enviar">Enviar</button>
+              </form>
+
+              <ul className="lista-comunicados">
+                {comunicados.map((c, i) => (
+                  <li key={i}>
+                    <strong>{c.titulo}:</strong> {c.mensagem}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       </div>

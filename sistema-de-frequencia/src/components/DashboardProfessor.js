@@ -1,3 +1,4 @@
+// src/components/DashboardProfessor.js
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
@@ -23,8 +24,8 @@ function DashboardProfessor() {
   ];
 
   const relatorios = [
-    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'Pendente!' },
-    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'Pendente!' },
+    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'pendente' },
+    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'pendente' },
   ];
 
   const aprovarRelatorio = (nome) => {

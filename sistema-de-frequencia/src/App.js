@@ -1,8 +1,8 @@
 import React from 'react';
-import DashboardCoordenador from './components/DashboardCoordenador';
+import CadastroUsuario from './components/CadastroUsuario';
 
 function App() {
-  return <DashboardCoordenador/>;
+  return <CadastroUsuario/>;
 }
 
 export default App;
