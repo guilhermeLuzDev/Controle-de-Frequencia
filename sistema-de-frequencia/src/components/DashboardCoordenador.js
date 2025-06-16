@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
 
 function DashboardCoordenador() {
+  
+
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
   const [mostrarCadastroBolsa, setMostrarCadastroBolsa] = useState(false);
@@ -21,6 +23,8 @@ function DashboardCoordenador() {
       nome: 'Partiu IF',
       tipo: 'Monitoria',
       professor: 'Prof. Jarbas',
+      cargaHoraria: 100,
+      relatorio: 'mensal',
       bolsistas: [
         { nome: 'Hérik Thiury', matricula: '20242TADS2-JG0069', status: 'Ativo', frequencia: 78 },
         { nome: 'Maria do Carmo', matricula: '20242TADS2-MC0044', status: 'Inativo', frequencia: 55 },
@@ -31,6 +35,8 @@ function DashboardCoordenador() {
       nome: 'PIBIC',
       tipo: 'Iniciação Científica',
       professor: 'Prof. Diego',
+      cargaHoraria: 80,
+      relatorio: 'não exige',
       bolsistas: [
         { nome: 'João Barbosa', matricula: '20242TADS2-JB0010', status: 'Ativo', frequencia: 92 },
       ],
@@ -40,6 +46,8 @@ function DashboardCoordenador() {
       nome: 'Tutoria de Pares',
       tipo: 'Tutoria de Pares',
       professor: 'Prof. Josefa',
+      cargaHoraria: 60,
+      relatorio: 'bimestral',
       bolsistas: [],
     },
   ];
@@ -67,7 +75,7 @@ function DashboardCoordenador() {
 
   const enviarCadastroBolsa = (e) => {
     e.preventDefault();
-    alert(`Bolsa "${novaBolsa.nome}" cadastrada com sucesso!\nFrequência de relatório: ${novaBolsa.relatorio || 'Não exige relatório'}`);
+    alert(`Bolsa "${novaBolsa.nome}" cadastrada com sucesso!\nCarga Horária: ${novaBolsa.cargaHoraria}h\nRelatório: ${novaBolsa.relatorio}`);
     setNovaBolsa({
       nome: '',
       tipo: '',
@@ -159,9 +167,9 @@ function DashboardCoordenador() {
               >
                 <option value="">Selecione...</option>
                 <option value="monitoria">Monitoria</option>
-                <option value="tutoria de pares">Tutoria de Pares</option>
-                <option value="extensão">Extensão</option>
-                <option value="iniciação científica">Iniciação Científica</option>
+                <option value="tutoria">Tutoria de Pares</option>
+                <option value="extensao">Extensão</option>
+                <option value="pesquisa">Iniciação Científica</option>
               </select>
 
               <label>Professor Responsável:</label>

@@ -7,6 +7,7 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
 
   const linksComuns = (
     <>
+      <li><button onClick={onClose}><Link to="/">Dashboard</Link></button></li>
       <li><button onClick={onClose}><Link to="/login">Sair</Link></button></li>
     </>
   );
@@ -16,10 +17,12 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
       <>
         <li><button onClick={onClose}><Link to="/bolsistas">Bolsistas</Link></button></li>
         <li><button onClick={onClose}><Link to="/relatorios">Relatórios</Link></button></li>
+        <li><button onClick={onClose}><Link to="/cadastro-bolsista">Cadastrar Bolsista</Link></button></li>
       </>
     ),
     coordenador: (
       <>
+        <li><button onClick={onClose}><Link to="/professores">Professores e Bolsas</Link></button></li>
         <li><button onClick={onClose}><Link to="/cadastro-bolsa">Cadastrar Bolsa</Link></button></li>
         <li><button onClick={onClose}><Link to="/cadastro-usuario">Cadastrar Usuário</Link></button></li>
       </>
@@ -34,6 +37,7 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
 
   return (
     <div className="sidebar">
+      <button className="close-button" onClick={onClose}>×</button>
       <ul>
         {linksPorTipo[tipoUsuario]}
         {linksComuns}
