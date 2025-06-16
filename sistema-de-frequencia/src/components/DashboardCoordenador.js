@@ -1,4 +1,3 @@
-// src/components/DashboardCoordenador.js
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
@@ -11,10 +10,8 @@ function DashboardCoordenador() {
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  // Simulação de professores disponíveis
   const professores = ['Prof. Jarbas', 'Prof. Diego', 'Prof. Josefa'];
 
-  // Simulação de bolsas existentes
   const bolsas = [
     {
       id: 1,
@@ -76,7 +73,6 @@ function DashboardCoordenador() {
       <div className="content">
         <h2>Visão Geral das Bolsas</h2>
 
-        {/* Tabela hierárquica de vínculos */}
         <div className="tabela-hierarquica">
           {bolsas.map((bolsa) => (
             <div key={bolsa.id} className="bloco-bolsa">
