@@ -8,7 +8,6 @@ function Dashboard() {
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  
   const nomeBolsa = 'Partiu IF';
   const cargaHorariaTotal = 100;
   const horasCumpridas = 78;
@@ -22,7 +21,7 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
-      <Sidebar visible={sidebarVisible} onClose={closeSidebar} />
+      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="bolsista" />
 
       <div className="content">
         <h2>Bem-vindo, Hérik Thiury!</h2>

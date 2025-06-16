@@ -91,7 +91,7 @@ function DashboardCoordenador() {
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
-      <Sidebar visible={sidebarVisible} onClose={closeSidebar} />
+      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="coordenador" />
 
       <div className="content">
         <h2>Visão Geral das Bolsas</h2>

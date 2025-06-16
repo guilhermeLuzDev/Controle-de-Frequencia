@@ -1,4 +1,7 @@
-// src/components/DashboardProfessor.js
+// =======================
+// DASHBOARD PROFESSOR
+// =======================
+
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
@@ -52,7 +55,7 @@ function DashboardProfessor() {
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
-      <Sidebar visible={sidebarVisible} onClose={closeSidebar} />
+      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="professor" />
 
       <div className="content">
         <h2>Painel do Professor</h2>

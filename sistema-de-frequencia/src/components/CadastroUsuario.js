@@ -44,7 +44,7 @@ function CadastroUsuario() {
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
-      <Sidebar visible={sidebarVisible} onClose={closeSidebar} />
+      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="coordenador" />
 
       <div className="content">
         <h2>Cadastro de Usuário</h2>
@@ -90,7 +90,8 @@ function CadastroUsuario() {
             <option value="bolsista">Bolsista</option>
           </select>
 
-          {(usuario.tipo === 'professor' || usuario.tipo === 'bolsista') && (
+          {/* Sempre mostra o campo de bolsa */}
+          {usuario.tipo && (
             <>
               <label>Bolsa vinculada:</label>
               <select

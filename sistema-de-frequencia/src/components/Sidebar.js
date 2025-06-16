@@ -1,17 +1,42 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
-function Sidebar({ visible, onClose }) {
+function Sidebar({ visible, onClose, tipoUsuario }) {
   if (!visible) return null;
+
+  const linksComuns = (
+    <>
+      <li><button onClick={onClose}><Link to="/login">Sair</Link></button></li>
+    </>
+  );
+
+  const linksPorTipo = {
+    professor: (
+      <>
+        <li><button onClick={onClose}><Link to="/bolsistas">Bolsistas</Link></button></li>
+        <li><button onClick={onClose}><Link to="/relatorios">Relatórios</Link></button></li>
+      </>
+    ),
+    coordenador: (
+      <>
+        <li><button onClick={onClose}><Link to="/cadastro-bolsa">Cadastrar Bolsa</Link></button></li>
+        <li><button onClick={onClose}><Link to="/cadastro-usuario">Cadastrar Usuário</Link></button></li>
+      </>
+    ),
+    bolsista: (
+      <>
+        <li><button onClick={onClose}><Link to="/frequencia">Frequência</Link></button></li>
+        <li><button onClick={onClose}><Link to="/enviar-relatorio">Enviar Relatório</Link></button></li>
+      </>
+    )
+  };
 
   return (
     <div className="sidebar">
-      <button className="close-btn" onClick={onClose}>×</button>
       <ul>
-        <li>Dashboard</li>
-        <li>Cadastro de Bolsistas</li>
-        <li>Frequência</li>
-        <li>Sair</li>
+        {linksPorTipo[tipoUsuario]}
+        {linksComuns}
       </ul>
     </div>
   );
