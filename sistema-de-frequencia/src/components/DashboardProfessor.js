@@ -1,4 +1,3 @@
-// src/components/DashboardProfessor.js
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
