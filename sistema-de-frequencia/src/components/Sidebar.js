@@ -5,9 +5,15 @@ import './Sidebar.css';
 function Sidebar({ visible, onClose, tipoUsuario }) {
   if (!visible) return null;
 
+  const dashboardLinks = {
+    coordenador: '/dashboard-coordenador',
+    professor: '/dashboard-professor',
+    bolsista: '/dashboard',
+  };
+
   const linksComuns = (
     <>
-      <li><button onClick={onClose}><Link to="/">Dashboard</Link></button></li>
+      <li><button onClick={onClose}><Link to={dashboardLinks[tipoUsuario] || '/'}>Dashboard</Link></button></li>
       <li><button onClick={onClose}><Link to="/login">Sair</Link></button></li>
     </>
   );

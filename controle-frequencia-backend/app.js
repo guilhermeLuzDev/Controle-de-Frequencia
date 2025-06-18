@@ -21,3 +21,17 @@ app.listen(PORT, () => {
 const usuariosRouter = require('./routes/usuarios');
 app.use('/usuarios', usuariosRouter);
 
+const bolsasRouter = require('./routes/bolsas');
+app.use('/bolsas', bolsasRouter);
+
+const frequenciaRouter = require('./routes/frequencia');
+app.use('/frequencia', frequenciaRouter);
+
+const relatoriosRouter = require('./routes/relatorios');
+app.use('/relatorios', relatoriosRouter);
+
+// Exemplo de uso de rota
+app.get('/exemplo', (req, res) => {
+  res.send('Esta é uma rota de exemplo!');
+});
+
