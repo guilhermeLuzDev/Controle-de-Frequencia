@@ -25,8 +25,8 @@ function LoginForm() {
         return;
       }
       localStorage.setItem('nome_usuario', usuario.nome_usuario);
-      if (usuario.po_usuario === 'coordenador') navigate('/dashboard-coordenador');
-      else if (usuario.po_usuario === 'professor') navigate('/dashboard-professor');
+      if (usuario.tipo_usuario === 'coordenador') navigate('/dashboard-coordenador');
+      else if (usuario.tipo_usuario === 'professor') navigate('/dashboard-professor');
       else navigate('/dashboard');
     } catch (err) {
       setErro('Erro ao conectar com o servidor.');
