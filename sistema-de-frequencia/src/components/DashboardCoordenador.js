@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
 
 function DashboardCoordenador() {
-  
+  const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
 
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
@@ -102,6 +102,7 @@ function DashboardCoordenador() {
       <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="coordenador" />
 
       <div className="content">
+        <h2>Bem-vindo, {nomeUsuario}!</h2>
         <h2>Visão Geral das Bolsas</h2>
 
         <div className="filtro">

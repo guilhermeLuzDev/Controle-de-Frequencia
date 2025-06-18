@@ -52,13 +52,15 @@ function DashboardProfessor() {
     setMensagemComunicado('');
   };
 
+  const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
+
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
       <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="professor" />
 
       <div className="content">
-        <h2>Painel do Professor</h2>
+        <h2>Bem-vindo, {nomeUsuario}!</h2>
 
         {/* Tabela de bolsistas */}
         <div className="tabela-programas">

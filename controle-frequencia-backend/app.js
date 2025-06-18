@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
   res.send('API funcionando!');
 });
 
+
 // Inicia o servidor
 const PORT = 3001;
 app.listen(PORT, () => {

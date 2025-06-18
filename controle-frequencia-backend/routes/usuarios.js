@@ -10,13 +10,13 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { nome_usuario, email, senha, po_usuario, matricula_usuario } = req.body;
+  const { nome_usuario, email, senha, tipo_usuario, matricula_usuario } = req.body;
   connection.query(
-    'INSERT INTO usuario (matricula_usuario, nome_usuario, email, senha, po_usuario) VALUES (?, ?, ?, ?, ?)',
-    [matricula_usuario, nome_usuario, email, senha, po_usuario],
+    'INSERT INTO usuario (matricula_usuario, nome_usuario, email, senha, tipo_usuario) VALUES (?, ?, ?, ?, ?)',
+    [matricula_usuario, nome_usuario, email, senha, tipo_usuario],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.status(201).json({ matricula_usuario, nome_usuario, email, senha, po_usuario });
+      res.status(201).json({ matricula_usuario, nome_usuario, email, senha, tipo_usuario });
     }
   );
 });
@@ -30,13 +30,13 @@ router.get('/:matricula_usuario', (req, res) => {
 });
 
 router.put('/:matricula_usuario', (req, res) => {
-  const { nome_usuario, email, senha, po_usuario } = req.body;
+  const { nome_usuario, email, senha, tipo_usuario } = req.body;
   connection.query(
-    'UPDATE usuario SET nome_usuario=?, email=?, senha=?, po_usuario=? WHERE matricula_usuario=?',
-    [nome_usuario, email, senha, po_usuario, req.params.matricula_usuario],
+    'UPDATE usuario SET nome_usuario=?, email=?, senha=?, tipo_usuario=? WHERE matricula_usuario=?',
+    [nome_usuario, email, senha, tipo_usuario, req.params.matricula_usuario],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ matricula_usuario: req.params.matricula_usuario, nome_usuario, email, senha, po_usuario });
+      res.json({ matricula_usuario: req.params.matricula_usuario, nome_usuario, email, senha, tipo_usuario: tipo_usuario });
     }
   );
 });

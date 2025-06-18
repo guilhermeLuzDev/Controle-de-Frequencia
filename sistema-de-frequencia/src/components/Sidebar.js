@@ -14,7 +14,7 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
   const linksComuns = (
     <>
       <li><button onClick={onClose}><Link to={dashboardLinks[tipoUsuario] || '/'}>Dashboard</Link></button></li>
-      <li><button onClick={onClose}><Link to="/login">Sair</Link></button></li>
+      <li><button onClick={onClose}><Link to="/">Sair</Link></button></li>
     </>
   );
 
