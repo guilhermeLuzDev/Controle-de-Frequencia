@@ -3,46 +3,46 @@ const router = express.Router();
 const connection = require('../db');
 
 router.get('/', (req, res) => {
-  connection.query('SELECT * FROM frequencia', (err, results) => {
+  connection.query('SELECT * FROM presenca', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 router.post('/', (req, res) => {
-  const { usuario_id, data, status } = req.body;
+  const { data_presenca, status_presenca, observacao, fk_usuario_matricula_usuario } = req.body;
   connection.query(
-    'INSERT INTO frequencia (usuario_id, data, status) VALUES (?, ?, ?)',
-    [usuario_id, data, status],
+    'INSERT INTO presenca (data_presenca, status_presenca, observacao, fk_usuario_matricula_usuario) VALUES (?, ?, ?, ?)',
+    [data_presenca, status_presenca, observacao, fk_usuario_matricula_usuario],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.status(201).json({ id: result.insertId, ...req.body });
+      res.status(201).json({ id_presenca: result.insertId, ...req.body });
     }
   );
 });
 
-router.get('/:id', (req, res) => {
-  connection.query('SELECT * FROM frequencia WHERE id = ?', [req.params.id], (err, results) => {
+router.get('/:id_presenca', (req, res) => {
+  connection.query('SELECT * FROM presenca WHERE id_presenca = ?', [req.params.id_presenca], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (results.length === 0) return res.status(404).json({ error: 'Frequência não encontrada' });
+    if (results.length === 0) return res.status(404).json({ error: 'Presença não encontrada' });
     res.json(results[0]);
   });
 });
 
-router.put('/:id', (req, res) => {
-  const { usuario_id, data, status } = req.body;
+router.put('/:id_presenca', (req, res) => {
+  const { data_presenca, status_presenca, observacao, fk_usuario_matricula_usuario } = req.body;
   connection.query(
-    'UPDATE frequencia SET usuario_id=?, data=?, status=? WHERE id=?',
-    [usuario_id, data, status, req.params.id],
+    'UPDATE presenca SET data_presenca=?, status_presenca=?, observacao=?, fk_usuario_matricula_usuario=? WHERE id_presenca=?',
+    [data_presenca, status_presenca, observacao, fk_usuario_matricula_usuario, req.params.id_presenca],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: req.params.id, ...req.body });
+      res.json({ id_presenca: req.params.id_presenca, ...req.body });
     }
   );
 });
 
-router.delete('/:id', (req, res) => {
-  connection.query('DELETE FROM frequencia WHERE id = ?', [req.params.id], (err) => {
+router.delete('/:id_presenca', (req, res) => {
+  connection.query('DELETE FROM presenca WHERE id_presenca = ?', [req.params.id_presenca], (err) => {
     if (err) return res.status(500).json({ error: err.message });
     res.status(204).send();
   });

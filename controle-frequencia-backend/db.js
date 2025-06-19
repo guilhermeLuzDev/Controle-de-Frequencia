@@ -1,11 +1,10 @@
-// db.js
 const mysql = require('mysql2');
 
 // Configuração da conexão com seu banco no WampServer
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',         // ou o usuário que você configurou
-  password: '',         // coloque sua senha aqui, se tiver
+  user: 'root',
+  password: '',
   database: 'frequencia_bolsistas'
 });
 
