@@ -1,4 +1,3 @@
-// sistema-de-frequencia/src/components/Dashboard.js
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import "./Dashboard.css";
@@ -8,12 +7,10 @@ import {
   Clock,
   TrendingUp,
   Bell,
+  Eye,
   Calendar,
+  User,
   BarChart3,
-  Upload, // Adicionado para "Enviar Relatório"
-  FileText, // Adicionado para "Relatórios"
-  UserPlus, // Adicionado para "Cadastrar Usuário"
-  LogOut,
 } from "lucide-react";
 
 function Dashboard() {
@@ -23,10 +20,10 @@ function Dashboard() {
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  const nomeBolsa = "Partiu IF"; //
-  const cargaHorariaTotal = 100; //
-  const horasCumpridas = 78; //
-  const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100); //
+  const nomeBolsa = "Partiu IF";
+  const cargaHorariaTotal = 100;
+  const horasCumpridas = 78;
+  const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
 
   const comunicados = [
     {
@@ -47,9 +44,9 @@ function Dashboard() {
       tipo: "info",
       data: "22/06",
     },
-  ]; //
+  ];
 
-  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário"; //
+  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
 
   // Animar progresso quando componente carrega
   useEffect(() => {
@@ -69,7 +66,6 @@ function Dashboard() {
         <Menu />
       </button>
 
-      {/* Tipo de usuário "bolsista" é passado aqui */}
       <Sidebar
         visible={sidebarVisible}
         onClose={closeSidebar}
@@ -91,7 +87,6 @@ function Dashboard() {
         </header>
 
         <div className="dashboard-grid">
-          {/* Cartões de Informação */}
           <div className="info-cards">
             <div className="card info-card">
               <div className="card-header">
@@ -127,7 +122,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Cartão de Progresso da Frequência */}
           <div className="card progress-card">
             <div className="card-header">
               <BarChart3 className="card-icon" />
@@ -170,7 +164,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Cartão de Comunicados */}
           <div className="card comunicados-card">
             <div className="card-header">
               <Bell className="card-icon" />
