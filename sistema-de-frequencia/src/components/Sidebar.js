@@ -1,13 +1,25 @@
-import { Link } from "react-router-dom"
-import "./Sidebar.css"
-import { X, Home, Users, FileText, UserPlus, GraduationCap, Plus, Calendar, Upload, LogOut, Award } from "lucide-react"
+import { Link } from "react-router-dom";
+import "./Sidebar.css";
+import {
+  X,
+  Home,
+  Users,
+  FileText,
+  UserPlus,
+  GraduationCap,
+  Plus,
+  Calendar,
+  Upload,
+  LogOut,
+  Award,
+} from "lucide-react";
 
 function Sidebar({ visible, onClose, tipoUsuario }) {
   const dashboardLinks = {
     coordenador: "/dashboard-coordenador",
     professor: "/dashboard-professor",
     bolsista: "/dashboard",
-  }
+  };
 
   const menuItems = {
     professor: [
@@ -18,22 +30,22 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
         category: "principal",
       },
       {
-        icon: Users,
-        label: "Bolsistas",
-        path: "/bolsistas",
-        category: "gestao",
-      },
-      {
         icon: FileText,
         label: "Relatórios",
         path: "/relatorios",
         category: "gestao",
       },
       {
-        icon: UserPlus,
-        label: "Cadastrar Bolsista",
-        path: "/cadastro-bolsista",
+        icon: Plus,
+        label: "Cadastrar Usuário",
+        path: "/cadastro-usuario",
         category: "cadastro",
+      },
+      {
+        icon: Calendar,
+        label: "Frequência",
+        path: "/frequencia",
+        category: "atividades",
       },
     ],
     coordenador: [
@@ -43,23 +55,19 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
         path: dashboardLinks[tipoUsuario] || "/",
         category: "principal",
       },
-      {
-        icon: GraduationCap,
-        label: "Professores e Bolsas",
-        path: "/professores",
-        category: "gestao",
-      },
-      {
-        icon: Award,
-        label: "Cadastrar Bolsa",
-        path: "/cadastro-bolsa",
-        category: "cadastro",
-      },
+
       {
         icon: Plus,
         label: "Cadastrar Usuário",
         path: "/cadastro-usuario",
         category: "cadastro",
+      },
+
+      {
+        icon: Calendar,
+        label: "Frequência",
+        path: "/frequencia",
+        category: "atividades",
       },
     ],
     bolsista: [
@@ -81,34 +89,41 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
         path: "/enviar-relatorio",
         category: "atividades",
       },
-    ],
-  }
 
-  const currentMenuItems = menuItems[tipoUsuario] || []
+      {
+        icon: Calendar,
+        label: "Frequência",
+        path: "/frequencia",
+        category: "atividades",
+      },
+    ],
+  };
+
+  const currentMenuItems = menuItems[tipoUsuario] || [];
 
   // Agrupar itens por categoria
   const groupedItems = currentMenuItems.reduce((acc, item) => {
     if (!acc[item.category]) {
-      acc[item.category] = []
+      acc[item.category] = [];
     }
-    acc[item.category].push(item)
-    return acc
-  }, {})
+    acc[item.category].push(item);
+    return acc;
+  }, {});
 
   const categoryLabels = {
     principal: "Principal",
     gestao: "Gestão",
     atividades: "Atividades",
     cadastro: "Cadastros",
-  }
+  };
 
   const userTypeLabels = {
     coordenador: "Coordenador",
     professor: "Professor",
     bolsista: "Bolsista",
-  }
+  };
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <>
@@ -116,13 +131,19 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
       <div className={`sidebar ${visible ? "sidebar-open" : ""}`}>
         <div className="sidebar-header">
           <div className="user-info">
-            <div className="user-avatar">{userTypeLabels[tipoUsuario]?.charAt(0) || "U"}</div>
+            <div className="user-avatar">
+              {userTypeLabels[tipoUsuario]?.charAt(0) || "U"}
+            </div>
             <div className="user-details">
               <h3>Menu</h3>
               <span className="user-type">{userTypeLabels[tipoUsuario]}</span>
             </div>
           </div>
-          <button className="close-button" onClick={onClose} aria-label="Fechar menu">
+          <button
+            className="close-button"
+            onClick={onClose}
+            aria-label="Fechar menu"
+          >
             <X />
           </button>
         </div>
@@ -133,15 +154,19 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
               <h4 className="section-title">{categoryLabels[category]}</h4>
               <ul className="nav-list">
                 {items.map((item, index) => {
-                  const IconComponent = item.icon
+                  const IconComponent = item.icon;
                   return (
                     <li key={index} className="nav-item">
-                      <Link to={item.path} className="nav-link" onClick={onClose}>
+                      <Link
+                        to={item.path}
+                        className="nav-link"
+                        onClick={onClose}
+                      >
                         <IconComponent className="nav-icon" />
                         <span className="nav-label">{item.label}</span>
                       </Link>
                     </li>
-                  )
+                  );
                 })}
               </ul>
             </div>
@@ -160,7 +185,7 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
         </nav>
       </div>
     </>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;

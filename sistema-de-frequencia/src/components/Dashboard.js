@@ -1,19 +1,29 @@
-import { useState, useEffect } from "react"
-import Sidebar from "./Sidebar"
-import "./Dashboard.css"
-import { Menu, Award, Clock, TrendingUp, Bell, Eye, Calendar, User, BarChart3 } from "lucide-react"
+import { useState, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import "./Dashboard.css";
+import {
+  Menu,
+  Award,
+  Clock,
+  TrendingUp,
+  Bell,
+  Eye,
+  Calendar,
+  User,
+  BarChart3,
+} from "lucide-react";
 
 function Dashboard() {
-  const [sidebarVisible, setSidebarVisible] = useState(false)
-  const [animateProgress, setAnimateProgress] = useState(false)
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [animateProgress, setAnimateProgress] = useState(false);
 
-  const toggleSidebar = () => setSidebarVisible(!sidebarVisible)
-  const closeSidebar = () => setSidebarVisible(false)
+  const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
+  const closeSidebar = () => setSidebarVisible(false);
 
-  const nomeBolsa = "Partiu IF"
-  const cargaHorariaTotal = 100
-  const horasCumpridas = 78
-  const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100)
+  const nomeBolsa = "Partiu IF";
+  const cargaHorariaTotal = 100;
+  const horasCumpridas = 78;
+  const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
 
   const comunicados = [
     {
@@ -34,25 +44,33 @@ function Dashboard() {
       tipo: "info",
       data: "22/06",
     },
-  ]
+  ];
 
-  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário"
+  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
 
   // Animar progresso quando componente carrega
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAnimateProgress(true)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
+      setAnimateProgress(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="dashboard-container">
-      <button className="menu-toggle" onClick={toggleSidebar} aria-label="Abrir menu">
+      <button
+        className="menu-toggle"
+        onClick={toggleSidebar}
+        aria-label="Abrir menu"
+      >
         <Menu />
       </button>
 
-      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="bolsista" />
+      <Sidebar
+        visible={sidebarVisible}
+        onClose={closeSidebar}
+        tipoUsuario="bolsista"
+      />
 
       <div className="content">
         <header className="dashboard-header">
@@ -126,15 +144,21 @@ function Dashboard() {
                   />
                 </svg>
                 <div className="percentage">
-                  <span className="number">{animateProgress ? percentual : 0}%</span>
+                  <span className="number">
+                    {animateProgress ? percentual : 0}%
+                  </span>
                 </div>
               </div>
               <div className="progress-details">
                 <p>
-                  <strong>{horasCumpridas}h</strong> de <strong>{cargaHorariaTotal}h</strong> cumpridas
+                  <strong>{horasCumpridas}h</strong> de{" "}
+                  <strong>{cargaHorariaTotal}h</strong> cumpridas
                 </p>
                 <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: animateProgress ? `${percentual}%` : "0%" }}></div>
+                  <div
+                    className="progress-fill"
+                    style={{ width: animateProgress ? `${percentual}%` : "0%" }}
+                  ></div>
                 </div>
               </div>
             </div>
@@ -148,7 +172,10 @@ function Dashboard() {
             </div>
             <div className="comunicados-list">
               {comunicados.map((comunicado, index) => (
-                <div key={index} className={`comunicado-item ${comunicado.tipo}`}>
+                <div
+                  key={index}
+                  className={`comunicado-item ${comunicado.tipo}`}
+                >
                   <div className="comunicado-header">
                     <h4>{comunicado.titulo}</h4>
                     <span className="comunicado-data">{comunicado.data}</span>
@@ -158,27 +185,10 @@ function Dashboard() {
               ))}
             </div>
           </div>
-
-          <div className="card actions-card">
-            <div className="card-header">
-              <User className="card-icon" />
-              <h3>Ações Rápidas</h3>
-            </div>
-            <div className="actions-grid">
-              <button className="action-button primary">
-                <Eye className="button-icon" />
-                Visualizar Presenças
-              </button>
-              <button className="action-button secondary">
-                <Calendar className="button-icon" />
-                Agendar Reunião
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

@@ -1,0 +1,16 @@
+.tabela-frequencia {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabela-frequencia th,
+.tabela-frequencia td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabela-frequencia th {
+  background-color: #f3f3f3;
+}
