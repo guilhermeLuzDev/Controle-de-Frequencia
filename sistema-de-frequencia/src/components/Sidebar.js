@@ -83,19 +83,6 @@ function Sidebar({ visible, onClose, tipoUsuario }) {
         path: "/frequencia",
         category: "atividades",
       },
-      {
-        icon: Upload,
-        label: "Enviar Relatório",
-        path: "/enviar-relatorio",
-        category: "atividades",
-      },
-
-      {
-        icon: Calendar,
-        label: "Frequência",
-        path: "/frequencia",
-        category: "atividades",
-      },
     ],
   };
 

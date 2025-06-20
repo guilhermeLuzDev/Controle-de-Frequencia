@@ -7,13 +7,15 @@ import {
   Clock,
   TrendingUp,
   Bell,
-  Eye,
+  Upload,
   Calendar,
-  User,
   BarChart3,
+  User,
 } from "lucide-react";
 
 function Dashboard() {
+  const [arquivo, setArquivo] = useState(null);
+  const [mensagemEnvio, setMensagemEnvio] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [animateProgress, setAnimateProgress] = useState(false);
 
@@ -24,6 +26,7 @@ function Dashboard() {
   const cargaHorariaTotal = 100;
   const horasCumpridas = 78;
   const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
+  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
 
   const comunicados = [
     {
@@ -38,39 +41,33 @@ function Dashboard() {
       tipo: "importante",
       data: "18/06",
     },
-    {
-      titulo: "Atualização do Sistema",
-      mensagem: "Sistema será atualizado no final de semana",
-      tipo: "info",
-      data: "22/06",
-    },
   ];
 
-  const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
+  const enviarRelatorio = () => {
+    if (!arquivo) {
+      setMensagemEnvio("Por favor, selecione um arquivo PDF.");
+      return;
+    }
 
-  // Animar progresso quando componente carrega
+    console.log("Arquivo enviado:", arquivo.name);
+    setMensagemEnvio("Relatório enviado com sucesso!");
+    setArquivo(null);
+
+    setTimeout(() => setMensagemEnvio(""), 4000);
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimateProgress(true);
-    }, 500);
+    const timer = setTimeout(() => setAnimateProgress(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="dashboard-container">
-      <button
-        className="menu-toggle"
-        onClick={toggleSidebar}
-        aria-label="Abrir menu"
-      >
+      <button className="menu-toggle" onClick={toggleSidebar} aria-label="Abrir menu">
         <Menu />
       </button>
 
-      <Sidebar
-        visible={sidebarVisible}
-        onClose={closeSidebar}
-        tipoUsuario="bolsista"
-      />
+      <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="bolsista" />
 
       <div className="content">
         <header className="dashboard-header">
@@ -87,6 +84,7 @@ function Dashboard() {
         </header>
 
         <div className="dashboard-grid">
+          {/* Cartões informativos */}
           <div className="info-cards">
             <div className="card info-card">
               <div className="card-header">
@@ -122,6 +120,7 @@ function Dashboard() {
             </div>
           </div>
 
+          {/* Progresso circular */}
           <div className="card progress-card">
             <div className="card-header">
               <BarChart3 className="card-icon" />
@@ -130,40 +129,27 @@ function Dashboard() {
             <div className="progress-content">
               <div className="circular-progress">
                 <svg viewBox="0 0 36 36" className="circular-chart">
-                  <path
-                    className="circle-bg"
-                    d="M18 2.0845
-                       a 15.9155 15.9155 0 0 1 0 31.831
-                       a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
+                  <path className="circle-bg" d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831" />
                   <path
                     className={`circle ${animateProgress ? "animate" : ""}`}
-                    d="M18 2.0845
-                       a 15.9155 15.9155 0 0 1 0 31.831"
+                    d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831"
                     strokeDasharray={`${animateProgress ? percentual : 0}, 100`}
                   />
                 </svg>
                 <div className="percentage">
-                  <span className="number">
-                    {animateProgress ? percentual : 0}%
-                  </span>
+                  <span className="number">{animateProgress ? percentual : 0}%</span>
                 </div>
               </div>
               <div className="progress-details">
-                <p>
-                  <strong>{horasCumpridas}h</strong> de{" "}
-                  <strong>{cargaHorariaTotal}h</strong> cumpridas
-                </p>
+                <p><strong>{horasCumpridas}h</strong> de <strong>{cargaHorariaTotal}h</strong> cumpridas</p>
                 <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: animateProgress ? `${percentual}%` : "0%" }}
-                  ></div>
+                  <div className="progress-fill" style={{ width: animateProgress ? `${percentual}%` : "0%" }}></div>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Comunicados */}
           <div className="card comunicados-card">
             <div className="card-header">
               <Bell className="card-icon" />
@@ -171,18 +157,28 @@ function Dashboard() {
               <span className="badge">{comunicados.length}</span>
             </div>
             <div className="comunicados-list">
-              {comunicados.map((comunicado, index) => (
-                <div
-                  key={index}
-                  className={`comunicado-item ${comunicado.tipo}`}
-                >
+              {comunicados.map((c, i) => (
+                <div key={i} className={`comunicado-item ${c.tipo}`}>
                   <div className="comunicado-header">
-                    <h4>{comunicado.titulo}</h4>
-                    <span className="comunicado-data">{comunicado.data}</span>
+                    <h4>{c.titulo}</h4>
+                    <span className="comunicado-data">{c.data}</span>
                   </div>
-                  <p>{comunicado.mensagem}</p>
+                  <p>{c.mensagem}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Enviar relatório */}
+          <div className="card upload-card">
+            <div className="card-header">
+              <Upload className="card-icon" />
+              <h3>Enviar Relatório</h3>
+            </div>
+            <div className="upload-section">
+              <input type="file" accept=".pdf" onChange={(e) => setArquivo(e.target.files[0])} />
+              <button className="botao" onClick={enviarRelatorio}>Enviar PDF</button>
+              {mensagemEnvio && <p className="mensagem-envio">{mensagemEnvio}</p>}
             </div>
           </div>
         </div>
