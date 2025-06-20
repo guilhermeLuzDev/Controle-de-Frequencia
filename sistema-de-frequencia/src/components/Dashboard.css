@@ -1,3 +1,5 @@
+/* sistema-de-frequencia/src/components/Dashboard.css */
+
 * {
   box-sizing: border-box;
 }
@@ -7,8 +9,10 @@
   min-height: 100vh;
   background: #f8fffe;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  flex-grow: 1; /* Permite que o container cresça para ocupar espaço disponível */
 }
 
+/* O menu-toggle é fixo, não precisa de alterações aqui para layout */
 .menu-toggle {
   position: fixed;
   top: 20px;
@@ -39,15 +43,18 @@
   height: 20px;
 }
 
+/* O conteúdo principal do dashboard */
 .content {
-  max-width: 1200px;
-  margin: 0 auto;
+  flex-grow: 1; /* Permite que o conteúdo ocupe o espaço restante */
+  max-width: 1200px; /* Limita a largura máxima para leitura confortável */
+  margin: 0 auto; /* Centraliza o bloco de conteúdo */
   padding: 32px 16px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 32px;
   box-sizing: border-box;
+  /* Removido: margin-left fixo, agora o layout pai App.js cuida disso */
 }
 
 .dashboard-header {
@@ -95,6 +102,7 @@
   color: #2e7d32;
 }
 
+/* Grid para os cards de informação e comunicados */
 .dashboard-grid, .info-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -111,7 +119,12 @@
   transition: box-shadow 0.3s;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* Alterado para centralizar o conteúdo horizontalmente dentro dos cards,
+     se isso for o "jogados para a esquerda" */
+  align-items: center; /* ALINHAMENTO CENTRAL para o conteúdo do card */
+  text-align: center; /* Centraliza o texto dentro dos cards */
+  position: relative; /* Necessário para o pseudo-elemento ::before */
+  overflow: hidden; /* Garante que o pseudo-elemento não vaze */
 }
 
 .card::before {
@@ -140,6 +153,9 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
+  /* Adicionado para centralizar o cabeçalho do card */
+  justify-content: center; /* Centraliza o ícone e o título */
+  width: 100%; /* Garante que o cabeçalho ocupe a largura total do card */
 }
 
 .card-icon {
@@ -160,7 +176,7 @@
   font-size: 18px;
   font-weight: 600;
   color: #333;
-  flex: 1;
+  flex: 1; /* Permite que o título ocupe o espaço */
 }
 
 .badge {
@@ -185,14 +201,19 @@
   font-size: 14px;
 }
 
+/* O cartão de progresso agora se expande em telas maiores */
 .progress-card {
-  grid-column: span 2;
+  grid-column: span 2; /* Ocupa duas colunas em telas maiores */
 }
 
 .progress-content {
   display: flex;
+  /* Alinhamento central para o circular-progress e progress-details */
   align-items: center;
+  justify-content: center; /* Adicionado para centralizar o grupo horizontalmente */
   gap: 40px;
+  width: 100%; /* Garante que o flex container ocupe a largura do card */
+  flex-wrap: wrap; /* Permite que os itens quebrem linha se necessário */
 }
 
 .circular-progress {
@@ -248,6 +269,7 @@
 
 .progress-details {
   flex: 1;
+  text-align: center; /* Centraliza o texto nos detalhes do progresso */
 }
 
 .progress-details p {
@@ -271,14 +293,17 @@
   transition: width 1.5s ease-in-out;
 }
 
+/* O cartão de comunicados também se expande */
 .comunicados-card {
-  grid-column: span 2;
+  grid-column: span 2; /* Ocupa duas colunas em telas maiores */
 }
 
 .comunicados-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%; /* Garante que a lista ocupe toda a largura do card */
+  align-items: center; /* Centraliza os itens da lista */
 }
 
 .comunicado-item {
@@ -286,6 +311,8 @@
   border-radius: 12px;
   border-left: 4px solid;
   transition: all 0.3s ease;
+  width: 100%; /* Garante que cada item ocupe a largura total */
+  text-align: left; /* Alinha o texto do comunicado à esquerda */
 }
 
 .comunicado-item.urgente {
@@ -313,6 +340,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  width: 100%;
 }
 
 .comunicado-header h4 {
@@ -338,57 +366,12 @@
   line-height: 1.5;
 }
 
-.actions-card .actions-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+/* Removi a seção .actions-card e .actions-grid, pois não estão no Dashboard do bolsista no JS */
 
-.action-button {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: left;
-}
-
-.action-button.primary {
-  background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
-  color: white;
-}
-
-.action-button.primary:hover {
-  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
-}
-
-.action-button.secondary {
-  background: #f8f9fa;
-  color: #2e7d32;
-  border: 2px solid #e8f5e8;
-}
-
-.action-button.secondary:hover {
-  background: #e8f5e8;
-  border-color: #2e7d32;
-  transform: translateY(-2px);
-}
-
-.button-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
 
 /* Responsividade */
 @media (max-width: 1200px) {
+  /* Em telas menores, os cartões de progresso e comunicados voltam a ocupar 1 coluna */
   .progress-card {
     grid-column: span 1;
   }
@@ -397,6 +380,7 @@
     grid-column: span 1;
   }
 
+  /* Ajuste para o conteúdo do progresso quando em coluna */
   .progress-content {
     flex-direction: column;
     gap: 20px;
@@ -406,8 +390,9 @@
 
 @media (max-width: 768px) {
   .content {
-    margin-left: 0;
-    padding: 20px 16px;
+    /* Removido margin-left: 0; e padding: 20px 16px;,
+       pois o .main-content-wrapper no App.js já fará o gerenciamento */
+    padding: 20px 16px; /* Mantém o padding interno */
   }
 
   .dashboard-header {
@@ -420,10 +405,12 @@
     font-size: 24px;
   }
 
+  /* Em telas menores, todos os cards de info ocupam 1 coluna */
   .info-cards {
     grid-template-columns: 1fr;
   }
 
+  /* A grade principal também se torna 1 coluna */
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
@@ -439,15 +426,6 @@
   .circular-progress {
     width: 120px;
     height: 120px;
-  }
-
-  .actions-grid {
-    gap: 8px;
-  }
-
-  .action-button {
-    padding: 12px 16px;
-    font-size: 14px;
   }
 }
 
@@ -499,4 +477,43 @@
   .percentage .number {
     font-size: 20px;
   }
+}
+
+/* Efeitos especiais */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
+  pointer-events: none;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+/* Melhorias de acessibilidade */
+.nav-link:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+}
+
+.close-button:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Transições suaves para mudança de estado */
+.sidebar * {
+  transition: all 0.3s ease;
 }
