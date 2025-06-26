@@ -28,7 +28,6 @@ function Dashboard() {
   const horasCumpridas = 78; // Isso deve vir do backend ou do contexto do usuário logado
   const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
   const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
-  // AGORA LÊ A MATRÍCULA DO LOCALSTORAGE
   const matriculaUsuario = localStorage.getItem("matricula_usuario");
 
 
@@ -53,7 +52,6 @@ function Dashboard() {
       return;
     }
 
-    // Verifica se a matrícula do usuário está disponível antes de enviar
     if (!matriculaUsuario) {
       setMensagemEnvio("Erro: Matrícula do usuário não encontrada. Por favor, faça login novamente.");
       return;
@@ -75,7 +73,7 @@ function Dashboard() {
       if (response.ok) {
         setMensagemEnvio("Relatório enviado com sucesso!");
         setArquivo(null);
-        fetchHistoricoRelatorios(); // Atualiza a lista de relatórios após o envio
+        fetchHistoricoRelatorios();
       } else {
         const erro = await response.json();
         setMensagemEnvio(`Erro ao enviar: ${erro.error}`);
@@ -88,9 +86,7 @@ function Dashboard() {
     setTimeout(() => setMensagemEnvio(""), 5000);
   };
 
-  // Função para buscar o histórico de relatórios
   const fetchHistoricoRelatorios = async () => {
-    // Só busca se a matrícula do usuário estiver disponível
     if (!matriculaUsuario) {
         setHistoricoRelatorios([]);
         return;
@@ -102,19 +98,33 @@ function Dashboard() {
         setHistoricoRelatorios(data);
       } else {
         console.error("Erro ao buscar histórico de relatórios:", response.statusText);
-        setHistoricoRelatorios([]); // Limpa se houver erro
+        setHistoricoRelatorios([]);
       }
     } catch (error) {
       console.error("Erro de conexão ao buscar histórico:", error);
-      setHistoricoRelatorios([]); // Limpa se houver erro
+      setHistoricoRelatorios([]);
     }
   };
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimateProgress(true), 500);
-    fetchHistoricoRelatorios(); // Busca o histórico de relatórios quando o componente monta ou matrícula muda
+    fetchHistoricoRelatorios();
     return () => clearTimeout(timer);
-  }, [matriculaUsuario]); // A matrícula é a dependência, então recarrega se ela mudar
+  }, [matriculaUsuario]);
+
+  // Função auxiliar para determinar a classe do status
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'aprovado':
+        return 'status-aprovado';
+      case 'reprovado':
+        return 'status-reprovado';
+      case 'pendente':
+        return 'status-pendente';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -237,7 +247,7 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Histórico de Relatórios (NOVO) */}
+          {/* Histórico de Relatórios */}
           <div className="card historico-relatorios-card">
             <div className="card-header">
               <FileText className="card-icon" />
@@ -259,7 +269,10 @@ function Dashboard() {
                     {historicoRelatorios.map((relatorio) => (
                       <tr key={relatorio.id_relatorio}>
                         <td>{new Date(relatorio.data_relatorio).toLocaleDateString('pt-BR')}</td>
-                        <td>{relatorio.status_relatorio}</td>
+                        {/* NOVO: Aplica classe CSS baseada no status */}
+                        <td className={getStatusClass(relatorio.status_relatorio)}>
+                          {relatorio.status_relatorio}
+                        </td>
                         <td>
                           {relatorio.arquivo_relatorio && (
                             <a

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'; // Importar useEffect
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
-import { Home, Plus, Calendar, FileText } from "lucide-react"; // Importar ícones necessários
+import { Home, Plus, Calendar, FileText } from "lucide-react";
 
 function DashboardCoordenador() {
   const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
-  const matriculaUsuarioLogado = localStorage.getItem('matricula_usuario'); // Obter matrícula do coordenador logado
+  const matriculaUsuarioLogado = localStorage.getItem('matricula_usuario');
 
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
@@ -14,7 +14,8 @@ function DashboardCoordenador() {
 
   // Estados para dados reais do backend
   const [professoresDisponiveis, setProfessoresDisponiveis] = useState([]);
-  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); // Para armazenar bolsas reais
+  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]);
+  const [bolsistasDaBolsa, setBolsistasDaBolsa] = useState({}); // NOVO: Para armazenar bolsistas de cada bolsa aberta
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
@@ -22,7 +23,7 @@ function DashboardCoordenador() {
   const [novaBolsa, setNovaBolsa] = useState({
     nome: '',
     tipo: '',
-    professor: '', // Professor responsável (matricula)
+    professor: '',
     cargaHoraria: '',
     relatorio: ''
   });
@@ -42,7 +43,6 @@ function DashboardCoordenador() {
       const response = await fetch('http://localhost:3001/usuarios');
       if (response.ok) {
         const usuarios = await response.json();
-        // Filtra apenas os usuários do tipo 'professor'
         const apenasProfessores = usuarios.filter(u => u.tipo_usuario === 'professor');
         setProfessoresDisponiveis(apenasProfessores);
       } else {
@@ -59,7 +59,6 @@ function DashboardCoordenador() {
       const response = await fetch('http://localhost:3001/bolsas');
       if (response.ok) {
         const data = await response.json();
-        // Mapear fk_usuario_matricula_responsavel para nome do professor
         const bolsasComNomes = await Promise.all(data.map(async bolsa => {
           if (bolsa.fk_usuario_matricula_responsavel) {
             try {
@@ -83,12 +82,29 @@ function DashboardCoordenador() {
   };
 
   useEffect(() => {
-    fetchProfessores(); // Carrega professores ao montar o componente
-    fetchBolsas();     // Carrega bolsas ao montar o componente
+    fetchProfessores();
+    fetchBolsas();
   }, []);
 
-  const toggleBolsa = (id) => {
-    setBolsasAtivas(prev => ({ ...prev, [id]: !prev[id] }));
+  // FUNÇÃO ATUALIZADA: Para buscar bolsistas da bolsa clicada
+  const toggleBolsa = async (idBolsa) => {
+    // Primeiro, alternar o estado de visibilidade da bolsa
+    setBolsasAtivas(prev => ({ ...prev, [idBolsa]: !prev[idBolsa] }));
+
+    // Se a bolsa estiver sendo ativada e ainda não tivermos os bolsistas
+    if (!bolsasAtivas[idBolsa]) { // Verifica o estado ANTERIOR, pois ele está sendo invertido acima
+      try {
+        const response = await fetch(`http://localhost:3001/usuarios/por-bolsa/${idBolsa}`);
+        if (response.ok) {
+          const data = await response.json();
+          setBolsistasDaBolsa(prev => ({ ...prev, [idBolsa]: data }));
+        } else {
+          console.error(`Erro ao buscar bolsistas para a bolsa ${idBolsa}:`, response.statusText);
+        }
+      } catch (error) {
+        console.error(`Erro de conexão ao buscar bolsistas para a bolsa ${idBolsa}:`, error);
+      }
+    }
   };
 
   const enviarCadastroBolsa = async (e) => {
@@ -102,9 +118,9 @@ function DashboardCoordenador() {
         body: JSON.stringify({
           nome_bolsa: novaBolsa.nome,
           tipo_bolsa: novaBolsa.tipo,
-          carga_horaria: parseInt(novaBolsa.cargaHoraria), // Converter para número
+          carga_horaria: parseInt(novaBolsa.cargaHoraria),
           frequencia_relatorio: novaBolsa.relatorio,
-          fk_usuario_matricula_responsavel: novaBolsa.professor // Enviar a matrícula do professor
+          fk_usuario_matricula_responsavel: novaBolsa.professor
         }),
       });
 
@@ -117,7 +133,7 @@ function DashboardCoordenador() {
           cargaHoraria: '',
           relatorio: ''
         });
-        fetchBolsas(); // Recarrega a lista de bolsas para exibir a nova
+        fetchBolsas();
       } else {
         const errorData = await response.json();
         alert(`Erro ao cadastrar bolsa: ${errorData.error || response.statusText}`);
@@ -135,7 +151,6 @@ function DashboardCoordenador() {
     setNovoComunicado({ titulo: '', mensagem: '' });
   };
 
-  // Filtragem de bolsas (agora sobre bolsasDisponiveis)
   const bolsasFiltradas = novaBolsa.professor
     ? bolsasDisponiveis.filter(b => b.fk_usuario_matricula_responsavel === novaBolsa.professor)
     : bolsasDisponiveis;
@@ -152,7 +167,7 @@ function DashboardCoordenador() {
         <div className="filtro">
           <label>Filtrar por professor:</label>
           <select
-            value={novaBolsa.professor} // Usar novaBolsa.professor para o filtro
+            value={novaBolsa.professor}
             onChange={(e) => setNovaBolsa({ ...novaBolsa, professor: e.target.value })}
           >
             <option value="">Todos</option>
@@ -173,11 +188,21 @@ function DashboardCoordenador() {
                 </button>
 
                 {bolsasAtivas[bolsa.id_bolsa] && (
-                  // Aqui você precisaria buscar os bolsistas vinculados a esta bolsa
-                  // Exemplo com mock, mas precisaria de uma rota /usuarios?fk_bolsa_id=X
-                  <p style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                    Bolsistas vinculados a esta bolsa (funcionalidade a ser implementada com busca no backend).
-                  </p>
+                  // NOVO: Exibir bolsistas vinculados à esta bolsa
+                  <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                    {bolsistasDaBolsa[bolsa.id_bolsa] && bolsistasDaBolsa[bolsa.id_bolsa].length > 0 ? (
+                      <ul className="lista-bolsistas">
+                        {bolsistasDaBolsa[bolsa.id_bolsa].map((bolsista) => (
+                          <li key={bolsista.matricula_usuario}>
+                            <strong>{bolsista.nome_usuario}</strong> — {bolsista.matricula_usuario}
+                            {/* Você pode adicionar status ou frequência aqui se tiver esses dados na busca */}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>Nenhum bolsista vinculado a esta bolsa.</p>
+                    )}
+                  </div>
                 )}
               </div>
             ))

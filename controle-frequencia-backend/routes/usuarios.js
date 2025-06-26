@@ -95,4 +95,31 @@ router.get('/por-professor/:matricula_professor_responsavel', (req, res) => {
   });
 });
 
+// Adicione esta nova rota ANTES do `module.exports = router;` final
+
+// GET (listar bolsistas vinculados a uma bolsa específica)
+router.get('/por-bolsa/:id_bolsa', (req, res) => {
+  const idBolsa = req.params.id_bolsa;
+
+  const sql = `
+    SELECT
+      u.matricula_usuario,
+      u.nome_usuario,
+      u.email,
+      u.tipo_usuario
+    FROM
+      usuario u
+    WHERE
+      u.fk_bolsa_id = ? AND u.tipo_usuario = 'bolsista';
+  `;
+
+  connection.query(sql, [idBolsa], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar bolsistas por bolsa:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
+  });
+});
+
 module.exports = router;

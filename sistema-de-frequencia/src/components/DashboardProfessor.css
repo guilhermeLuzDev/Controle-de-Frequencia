@@ -131,3 +131,31 @@ h2 {
 .lista-comunicados li {
   margin-bottom: 10px;
 }
+
+/* Classes para o Status do Relatório */
+.status-aprovado {
+  color: #2e7d32; /* Verde forte */
+  font-weight: bold;
+  background-color: #e8f5e8; /* Fundo verde claro */
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.status-reprovado {
+  color: #c62828; /* Vermelho forte */
+  font-weight: bold;
+  background-color: #ffebee; /* Fundo vermelho claro */
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.status-pendente {
+  color: #ffa000; /* Laranja/Amarelo forte */
+  font-weight: bold;
+  background-color: #fff8e1; /* Fundo amarelo claro */
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
