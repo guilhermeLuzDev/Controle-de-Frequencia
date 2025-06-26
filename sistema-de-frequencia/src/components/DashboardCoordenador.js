@@ -1,61 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Importar useEffect
 import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
+import { Home, Plus, Calendar, FileText } from "lucide-react"; // Importar ícones necessários
 
 function DashboardCoordenador() {
   const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
+  const matriculaUsuarioLogado = localStorage.getItem('matricula_usuario'); // Obter matrícula do coordenador logado
 
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
   const [mostrarCadastroBolsa, setMostrarCadastroBolsa] = useState(false);
   const [mostrarComunicados, setMostrarComunicados] = useState(false);
 
+  // Estados para dados reais do backend
+  const [professoresDisponiveis, setProfessoresDisponiveis] = useState([]);
+  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); // Para armazenar bolsas reais
+
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
-
-  const professores = ['Prof. Jarbas', 'Prof. Diego', 'Prof. Josefa'];
-
-  const [filtroProfessor, setFiltroProfessor] = useState('');
-
-  const bolsas = [
-    {
-      id: 1,
-      nome: 'Partiu IF',
-      tipo: 'Monitoria',
-      professor: 'Prof. Jarbas',
-      cargaHoraria: 100,
-      relatorio: 'mensal',
-      bolsistas: [
-        { nome: 'Hérik Thiury', matricula: '20242TADS2-JG0069', status: 'Ativo', frequencia: 78 },
-        { nome: 'Maria do Carmo', matricula: '20242TADS2-MC0044', status: 'Inativo', frequencia: 55 },
-      ],
-    },
-    {
-      id: 2,
-      nome: 'PIBIC',
-      tipo: 'Iniciação Científica',
-      professor: 'Prof. Diego',
-      cargaHoraria: 80,
-      relatorio: 'não exige',
-      bolsistas: [
-        { nome: 'João Barbosa', matricula: '20242TADS2-JB0010', status: 'Ativo', frequencia: 92 },
-      ],
-    },
-    {
-      id: 3,
-      nome: 'Tutoria de Pares',
-      tipo: 'Tutoria de Pares',
-      professor: 'Prof. Josefa',
-      cargaHoraria: 60,
-      relatorio: 'bimestral',
-      bolsistas: [],
-    },
-  ];
 
   const [novaBolsa, setNovaBolsa] = useState({
     nome: '',
     tipo: '',
-    professor: '',
+    professor: '', // Professor responsável (matricula)
     cargaHoraria: '',
     relatorio: ''
   });
@@ -69,20 +36,96 @@ function DashboardCoordenador() {
     mensagem: ''
   });
 
+  // Função para buscar professores do backend
+  const fetchProfessores = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/usuarios');
+      if (response.ok) {
+        const usuarios = await response.json();
+        // Filtra apenas os usuários do tipo 'professor'
+        const apenasProfessores = usuarios.filter(u => u.tipo_usuario === 'professor');
+        setProfessoresDisponiveis(apenasProfessores);
+      } else {
+        console.error('Erro ao buscar professores:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro de conexão ao buscar professores:', error);
+    }
+  };
+
+  // Função para buscar bolsas do backend
+  const fetchBolsas = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/bolsas');
+      if (response.ok) {
+        const data = await response.json();
+        // Mapear fk_usuario_matricula_responsavel para nome do professor
+        const bolsasComNomes = await Promise.all(data.map(async bolsa => {
+          if (bolsa.fk_usuario_matricula_responsavel) {
+            try {
+              const resProf = await fetch(`http://localhost:3001/usuarios/${bolsa.fk_usuario_matricula_responsavel}`);
+              const prof = await resProf.json();
+              return { ...bolsa, professor_nome: prof.nome_usuario };
+            } catch (err) {
+              console.error(`Erro ao buscar nome do professor para matrícula ${bolsa.fk_usuario_matricula_responsavel}:`, err);
+              return { ...bolsa, professor_nome: 'Desconhecido' };
+            }
+          }
+          return { ...bolsa, professor_nome: 'Não Atribuído' };
+        }));
+        setBolsasDisponiveis(bolsasComNomes);
+      } else {
+        console.error('Erro ao buscar bolsas:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro de conexão ao buscar bolsas:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfessores(); // Carrega professores ao montar o componente
+    fetchBolsas();     // Carrega bolsas ao montar o componente
+  }, []);
+
   const toggleBolsa = (id) => {
     setBolsasAtivas(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const enviarCadastroBolsa = (e) => {
+  const enviarCadastroBolsa = async (e) => {
     e.preventDefault();
-    alert(`Bolsa "${novaBolsa.nome}" cadastrada com sucesso!\nCarga Horária: ${novaBolsa.cargaHoraria}h\nRelatório: ${novaBolsa.relatorio}`);
-    setNovaBolsa({
-      nome: '',
-      tipo: '',
-      professor: '',
-      cargaHoraria: '',
-      relatorio: ''
-    });
+    try {
+      const response = await fetch('http://localhost:3001/bolsas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome_bolsa: novaBolsa.nome,
+          tipo_bolsa: novaBolsa.tipo,
+          carga_horaria: parseInt(novaBolsa.cargaHoraria), // Converter para número
+          frequencia_relatorio: novaBolsa.relatorio,
+          fk_usuario_matricula_responsavel: novaBolsa.professor // Enviar a matrícula do professor
+        }),
+      });
+
+      if (response.ok) {
+        alert(`Bolsa "${novaBolsa.nome}" cadastrada com sucesso!`);
+        setNovaBolsa({
+          nome: '',
+          tipo: '',
+          professor: '',
+          cargaHoraria: '',
+          relatorio: ''
+        });
+        fetchBolsas(); // Recarrega a lista de bolsas para exibir a nova
+      } else {
+        const errorData = await response.json();
+        alert(`Erro ao cadastrar bolsa: ${errorData.error || response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Erro de conexão ao cadastrar bolsa:', error);
+      alert('Erro de conexão com o servidor ao cadastrar bolsa.');
+    }
   };
 
   const enviarComunicado = (e) => {
@@ -92,9 +135,10 @@ function DashboardCoordenador() {
     setNovoComunicado({ titulo: '', mensagem: '' });
   };
 
-  const bolsasFiltradas = filtroProfessor
-    ? bolsas.filter(b => b.professor === filtroProfessor)
-    : bolsas;
+  // Filtragem de bolsas (agora sobre bolsasDisponiveis)
+  const bolsasFiltradas = novaBolsa.professor
+    ? bolsasDisponiveis.filter(b => b.fk_usuario_matricula_responsavel === novaBolsa.professor)
+    : bolsasDisponiveis;
 
   return (
     <div className="dashboard-container">
@@ -108,41 +152,36 @@ function DashboardCoordenador() {
         <div className="filtro">
           <label>Filtrar por professor:</label>
           <select
-            value={filtroProfessor}
-            onChange={(e) => setFiltroProfessor(e.target.value)}
+            value={novaBolsa.professor} // Usar novaBolsa.professor para o filtro
+            onChange={(e) => setNovaBolsa({ ...novaBolsa, professor: e.target.value })}
           >
             <option value="">Todos</option>
-            {professores.map((p, i) => (
-              <option key={i} value={p}>{p}</option>
+            {professoresDisponiveis.map((p) => (
+              <option key={p.matricula_usuario} value={p.matricula_usuario}>{p.nome_usuario}</option>
             ))}
           </select>
         </div>
 
         <div className="tabela-hierarquica">
-          {bolsasFiltradas.map((bolsa) => (
-            <div key={bolsa.id} className="bloco-bolsa">
-              <button className="toggle-bolsa" onClick={() => toggleBolsa(bolsa.id)}>
-                {bolsasAtivas[bolsa.id] ? '▼' : '▶'} {bolsa.nome} ({bolsa.tipo}) — {bolsa.professor}
-              </button>
+          {bolsasFiltradas.length === 0 ? (
+            <p>Nenhuma bolsa encontrada.</p>
+          ) : (
+            bolsasFiltradas.map((bolsa) => (
+              <div key={bolsa.id_bolsa} className="bloco-bolsa">
+                <button className="toggle-bolsa" onClick={() => toggleBolsa(bolsa.id_bolsa)}>
+                  {bolsasAtivas[bolsa.id_bolsa] ? '▼' : '▶'} {bolsa.nome_bolsa} ({bolsa.tipo_bolsa}) — {bolsa.professor_nome} (Carga: {bolsa.carga_horaria}h)
+                </button>
 
-              {bolsasAtivas[bolsa.id] && (
-                bolsa.bolsistas.length > 0 ? (
-                  <ul className="lista-bolsistas">
-                    {bolsa.bolsistas.map((b, i) => (
-                      <li key={i}>
-                        <strong>{b.nome}</strong> — {b.matricula} — 
-                        <span className={b.status === 'Ativo' ? 'ativo' : 'inativo'}>
-                          {b.status}
-                        </span> — {b.frequencia}%
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p style={{ paddingLeft: "20px", marginTop: "10px" }}>Nenhum bolsista vinculado.</p>
-                )
-              )}
-            </div>
-          ))}
+                {bolsasAtivas[bolsa.id_bolsa] && (
+                  // Aqui você precisaria buscar os bolsistas vinculados a esta bolsa
+                  // Exemplo com mock, mas precisaria de uma rota /usuarios?fk_bolsa_id=X
+                  <p style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                    Bolsistas vinculados a esta bolsa (funcionalidade a ser implementada com busca no backend).
+                  </p>
+                )}
+              </div>
+            ))
+          )}
         </div>
 
         <div className="aba">
@@ -167,10 +206,10 @@ function DashboardCoordenador() {
                 required
               >
                 <option value="">Selecione...</option>
-                <option value="monitoria">Monitoria</option>
-                <option value="tutoria">Tutoria de Pares</option>
-                <option value="extensao">Extensão</option>
-                <option value="pesquisa">Iniciação Científica</option>
+                <option value="Monitoria">Monitoria</option>
+                <option value="Tutoria de Pares">Tutoria de Pares</option>
+                <option value="Extensão">Extensão</option>
+                <option value="Iniciação Científica">Iniciação Científica</option>
               </select>
 
               <label>Professor Responsável:</label>
@@ -180,8 +219,8 @@ function DashboardCoordenador() {
                 required
               >
                 <option value="">Selecione...</option>
-                {professores.map((p, i) => (
-                  <option key={i} value={p}>{p}</option>
+                {professoresDisponiveis.map((p) => (
+                  <option key={p.matricula_usuario} value={p.matricula_usuario}>{p.nome_usuario}</option>
                 ))}
               </select>
 

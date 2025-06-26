@@ -25,7 +25,7 @@ function LoginForm() {
     setCarregando(true)
 
     try {
-      const res = await fetch(`http://localhost:3001/usuarios`)
+      const res = await fetch(`http://localhost:3001/usuarios`) // Busca todos os usuários
       const usuarios = await res.json()
       const usuario = usuarios.find((u) => u.email === email && u.senha === senha)
 
@@ -35,7 +35,11 @@ function LoginForm() {
         return
       }
 
+      // NOVO: Salvar nome_usuario, matricula_usuario e tipo_usuario no localStorage
       localStorage.setItem("nome_usuario", usuario.nome_usuario)
+      localStorage.setItem("matricula_usuario", usuario.matricula_usuario)
+      localStorage.setItem("tipo_usuario", usuario.tipo_usuario) // LINHA CRUCIAL ADICIONADA/CORRIGIDA!
+
 
       if (usuario.tipo_usuario === "coordenador") {
         navigate("/dashboard-coordenador")
@@ -45,8 +49,9 @@ function LoginForm() {
         navigate("/dashboard")
       }
     } catch (err) {
-      setErro("Erro ao conectar com o servidor.")
-      setCarregando(false)
+      console.error("Erro ao conectar com o servidor ou ao processar login:", err);
+      setErro("Erro ao conectar com o servidor.");
+      setCarregando(false);
     }
   }
 

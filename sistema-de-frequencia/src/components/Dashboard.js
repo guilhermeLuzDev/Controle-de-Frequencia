@@ -10,7 +10,7 @@ import {
   Upload,
   Calendar,
   BarChart3,
-  User,
+  FileText,
 } from "lucide-react";
 
 function Dashboard() {
@@ -18,15 +18,19 @@ function Dashboard() {
   const [mensagemEnvio, setMensagemEnvio] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [animateProgress, setAnimateProgress] = useState(false);
+  const [historicoRelatorios, setHistoricoRelatorios] = useState([]);
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  const nomeBolsa = "Partiu IF";
-  const cargaHorariaTotal = 100;
-  const horasCumpridas = 78;
+  const nomeBolsa = "Partiu IF"; // Isso deve vir do backend ou do contexto do usuário logado
+  const cargaHorariaTotal = 100; // Isso deve vir do backend ou do contexto do usuário logado
+  const horasCumpridas = 78; // Isso deve vir do backend ou do contexto do usuário logado
   const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
   const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
+  // AGORA LÊ A MATRÍCULA DO LOCALSTORAGE
+  const matriculaUsuario = localStorage.getItem("matricula_usuario");
+
 
   const comunicados = [
     {
@@ -43,46 +47,74 @@ function Dashboard() {
     },
   ];
 
-const enviarRelatorio = async () => {
-  if (!arquivo) {
-    setMensagemEnvio("Por favor, selecione um arquivo PDF.");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("arquivo", arquivo);
-  formData.append("data_relatorio", new Date().toISOString().split("T")[0]);
-  formData.append("conteudo", "Relatório enviado pelo sistema");
-  formData.append("status_relatorio", "pendente");
-  formData.append("fk_usuario_matricula_usuario", "20242TADS2-JG0069"); // ⚠️ Pegue do login depois
-
-  try {
-    const response = await fetch("http://localhost:3001/relatorios", {
-      method: "POST",
-      body: formData, // não definir headers, o browser define para FormData
-    });
-
-    if (response.ok) {
-      setMensagemEnvio("Relatório enviado com sucesso!");
-      setArquivo(null);
-    } else {
-      const erro = await response.json();
-      setMensagemEnvio(`Erro ao enviar: ${erro.error}`);
+  const enviarRelatorio = async () => {
+    if (!arquivo) {
+      setMensagemEnvio("Por favor, selecione um arquivo PDF.");
+      return;
     }
-  } catch (error) {
-    console.error("Erro ao enviar:", error);
-    setMensagemEnvio("Erro de conexão com o servidor.");
-  }
 
-  setTimeout(() => setMensagemEnvio(""), 5000);
-};
+    // Verifica se a matrícula do usuário está disponível antes de enviar
+    if (!matriculaUsuario) {
+      setMensagemEnvio("Erro: Matrícula do usuário não encontrada. Por favor, faça login novamente.");
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("arquivo", arquivo);
+    formData.append("data_relatorio", new Date().toISOString().split("T")[0]);
+    formData.append("conteudo", "Relatório enviado pelo sistema");
+    formData.append("status_relatorio", "pendente");
+    formData.append("fk_usuario_matricula_usuario", matriculaUsuario);
 
+    try {
+      const response = await fetch("http://localhost:3001/relatorios", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setMensagemEnvio("Relatório enviado com sucesso!");
+        setArquivo(null);
+        fetchHistoricoRelatorios(); // Atualiza a lista de relatórios após o envio
+      } else {
+        const erro = await response.json();
+        setMensagemEnvio(`Erro ao enviar: ${erro.error}`);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar:", error);
+      setMensagemEnvio("Erro de conexão com o servidor.");
+    }
+
+    setTimeout(() => setMensagemEnvio(""), 5000);
+  };
+
+  // Função para buscar o histórico de relatórios
+  const fetchHistoricoRelatorios = async () => {
+    // Só busca se a matrícula do usuário estiver disponível
+    if (!matriculaUsuario) {
+        setHistoricoRelatorios([]);
+        return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3001/relatorios?matricula_usuario=${matriculaUsuario}`);
+      if (response.ok) {
+        const data = await response.json();
+        setHistoricoRelatorios(data);
+      } else {
+        console.error("Erro ao buscar histórico de relatórios:", response.statusText);
+        setHistoricoRelatorios([]); // Limpa se houver erro
+      }
+    } catch (error) {
+      console.error("Erro de conexão ao buscar histórico:", error);
+      setHistoricoRelatorios([]); // Limpa se houver erro
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimateProgress(true), 500);
+    fetchHistoricoRelatorios(); // Busca o histórico de relatórios quando o componente monta ou matrícula muda
     return () => clearTimeout(timer);
-  }, []);
+  }, [matriculaUsuario]); // A matrícula é a dependência, então recarrega se ela mudar
 
   return (
     <div className="dashboard-container">
@@ -202,6 +234,48 @@ const enviarRelatorio = async () => {
               <input type="file" accept=".pdf" onChange={(e) => setArquivo(e.target.files[0])} />
               <button className="botao" onClick={enviarRelatorio}>Enviar PDF</button>
               {mensagemEnvio && <p className="mensagem-envio">{mensagemEnvio}</p>}
+            </div>
+          </div>
+
+          {/* Histórico de Relatórios (NOVO) */}
+          <div className="card historico-relatorios-card">
+            <div className="card-header">
+              <FileText className="card-icon" />
+              <h3>Histórico de Relatórios</h3>
+            </div>
+            <div className="relatorios-list">
+              {historicoRelatorios.length === 0 ? (
+                <p>Nenhum relatório enviado ainda.</p>
+              ) : (
+                <table className="tabela-relatorios">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Status</th>
+                      <th>Visualizar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {historicoRelatorios.map((relatorio) => (
+                      <tr key={relatorio.id_relatorio}>
+                        <td>{new Date(relatorio.data_relatorio).toLocaleDateString('pt-BR')}</td>
+                        <td>{relatorio.status_relatorio}</td>
+                        <td>
+                          {relatorio.arquivo_relatorio && (
+                            <a
+                              href={`http://localhost:3001/relatorios/arquivo/${relatorio.arquivo_relatorio}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Abrir PDF
+                            </a>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

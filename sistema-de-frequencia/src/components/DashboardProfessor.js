@@ -2,41 +2,125 @@
 // DASHBOARD PROFESSOR
 // =======================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
+import { FileText, Plus, Calendar, Home } from "lucide-react"; // Importar ícones necessários
 
 function DashboardProfessor() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [mostrarRelatorios, setMostrarRelatorios] = useState(false);
   const [mostrarComunicados, setMostrarComunicados] = useState(false);
-
   const [tituloComunicado, setTituloComunicado] = useState('');
   const [mensagemComunicado, setMensagemComunicado] = useState('');
   const [comunicados, setComunicados] = useState([
     { titulo: 'Reunião geral', mensagem: 'Acontecerá dia 18/06 às 14h.' },
   ]);
 
+  const [relatoriosBolsistas, setRelatoriosBolsistas] = useState([]); // Estado para relatórios reais
+  const [bolsistasDoProfessor, setBolsistasDoProfessor] = useState([]); // NOVO: Estado para bolsistas vinculados
+
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  const bolsistas = [
-    { nome: 'Hérik Thiury', matricula: '20242TADS2-JG0069', bolsa: 'Partiu IF', frequencia: 78 },
-    { nome: 'Maria do Carmo', matricula: '20242TADS2-MC0044', bolsa: 'Partiu IF', frequencia: 85 },
-    { nome: 'João Barbosa', matricula: '20242TADS2-JB0010', bolsa: 'PIBIC', frequencia: 92 },
-  ];
+  const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
+  const matriculaProfessorLogado = localStorage.getItem('matricula_usuario');
 
-  const relatorios = [
-    { nome: 'Hérik Thiury', data: '2025-06-12', status: 'pendente' },
-    { nome: 'Maria do Carmo', data: '2025-06-13', status: 'pendente' },
-  ];
-
-  const aprovarRelatorio = (nome) => {
-    alert(`Relatório de ${nome} aprovado!`);
+  // Função para buscar relatórios dos bolsistas *deste professor*
+  const fetchRelatoriosBolsistas = async () => {
+    if (!matriculaProfessorLogado) {
+      console.warn("Matrícula do professor não encontrada no localStorage.");
+      setRelatoriosBolsistas([]);
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3001/relatorios/por-professor/${matriculaProfessorLogado}`);
+      if (response.ok) {
+        const data = await response.json();
+        setRelatoriosBolsistas(data);
+      } else {
+        console.error("Erro ao buscar relatórios por professor:", response.statusText);
+        setRelatoriosBolsistas([]);
+      }
+    } catch (error) {
+      console.error("Erro de conexão ao buscar relatórios por professor:", error);
+      setRelatoriosBolsistas([]);
+    }
   };
 
-  const reprovarRelatorio = (nome) => {
-    alert(`Relatório de ${nome} reprovado.`);
+  // NOVO: Função para buscar bolsistas vinculados a este professor
+  const fetchBolsistasDoProfessor = async () => {
+    if (!matriculaProfessorLogado) {
+      console.warn("Matrícula do professor não encontrada no localStorage para buscar bolsistas.");
+      setBolsistasDoProfessor([]);
+      return;
+    }
+    try {
+      // Usando a nova rota backend para buscar bolsistas específicos deste professor
+      const response = await fetch(`http://localhost:3001/usuarios/por-professor/${matriculaProfessorLogado}`);
+      if (response.ok) {
+        const data = await response.json();
+        setBolsistasDoProfessor(data);
+      } else {
+        console.error("Erro ao buscar bolsistas por professor:", response.statusText);
+        setBolsistasDoProfessor([]);
+      }
+    } catch (error) {
+      console.error("Erro de conexão ao buscar bolsistas por professor:", error);
+      setBolsistasDoProfessor([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchRelatoriosBolsistas(); // Busca relatórios ao carregar o componente
+    fetchBolsistasDoProfessor(); // NOVO: Busca bolsistas ao carregar o componente
+  }, [matriculaProfessorLogado]);
+
+  const aprovarRelatorio = async (idRelatorio) => {
+    try {
+      const response = await fetch(`http://localhost:3001/relatorios/${idRelatorio}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status_relatorio: 'aprovado' }),
+      });
+
+      if (response.ok) {
+        alert(`Relatório ${idRelatorio} aprovado com sucesso!`);
+        fetchRelatoriosBolsistas(); // Recarrega a lista de relatórios
+      } else {
+        const erro = await response.json();
+        alert(`Erro ao aprovar relatório: ${erro.error}`);
+      }
+    } catch (error) {
+      console.error("Erro ao comunicar com a API:", error);
+      alert("Erro de conexão ao tentar aprovar o relatório.");
+    }
+  };
+
+  const reprovarRelatorio = async (idRelatorio) => {
+    const observacao = prompt("Motivo da reprovação (opcional):");
+    try {
+      const response = await fetch(`http://localhost:3001/relatorios/${idRelatorio}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status_relatorio: 'reprovado', conteudo: observacao || 'Reprovado sem observação.' }),
+      });
+
+      if (response.ok) {
+        alert(`Relatório ${idRelatorio} reprovado com sucesso!`);
+        fetchRelatoriosBolsistas(); // Recarrega a lista de relatórios
+      } else {
+        const erro = await response.json();
+        alert(`Erro ao reprovar relatório: ${erro.error}`);
+      }
+    } catch (error) {
+      console.error("Erro ao comunicar com a API:", error);
+      alert("Erro de conexão ao tentar reprovar o relatório.");
+    }
   };
 
   const enviarComunicado = (e) => {
@@ -52,8 +136,6 @@ function DashboardProfessor() {
     setMensagemComunicado('');
   };
 
-  const nomeUsuario = localStorage.getItem('nome_usuario') || 'Usuário';
-
   return (
     <div className="dashboard-container">
       <button className="menu-toggle" onClick={toggleSidebar}>☰</button>
@@ -62,29 +144,33 @@ function DashboardProfessor() {
       <div className="content">
         <h2>Bem-vindo, {nomeUsuario}!</h2>
 
-        {/* Tabela de bolsistas */}
+        {/* Tabela de bolsistas vinculados - AGORA BUSCANDO DO BACKEND */}
         <div className="tabela-programas">
           <p className="subtitulo">Bolsistas Vinculados</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Matrícula</th>
-                <th>Bolsa</th>
-                <th>Frequência</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bolsistas.map((b, i) => (
-                <tr key={i}>
-                  <td>{b.nome}</td>
-                  <td>{b.matricula}</td>
-                  <td>{b.bolsa}</td>
-                  <td>{b.frequencia}%</td>
+          {bolsistasDoProfessor.length === 0 ? (
+            <p>Nenhum bolsista vinculado a este professor encontrado.</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Matrícula</th>
+                  <th>Bolsa Vinculada</th>
+                  <th>Carga Horária Bolsa</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {bolsistasDoProfessor.map((bolsista) => (
+                  <tr key={bolsista.matricula_usuario}>
+                    <td>{bolsista.nome_usuario}</td>
+                    <td>{bolsista.matricula_usuario}</td>
+                    <td>{bolsista.nome_bolsa_vinculada}</td>
+                    <td>{bolsista.carga_horaria}h</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Aba: Relatórios */}
@@ -94,29 +180,49 @@ function DashboardProfessor() {
           </button>
 
           {mostrarRelatorios && (
-            <table className="subtabela">
-              <thead>
-                <tr>
-                  <th>Bolsista</th>
-                  <th>Data</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {relatorios.map((r, i) => (
-                  <tr key={i}>
-                    <td>{r.nome}</td>
-                    <td>{r.data}</td>
-                    <td>{r.status}</td>
-                    <td>
-                      <button className="aprovar" onClick={() => aprovarRelatorio(r.nome)}>✔</button>
-                      <button className="reprovar" onClick={() => reprovarRelatorio(r.nome)}>✖</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            relatoriosBolsistas.length === 0 ? (
+                <p>Nenhum relatório enviado pelos seus bolsistas ainda.</p>
+            ) : (
+                <table className="subtabela">
+                <thead>
+                    <tr>
+                    <th>Bolsista (Matrícula)</th>
+                    <th>Bolsista (Nome)</th>
+                    <th>Bolsa</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Visualizar</th>
+                    <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {relatoriosBolsistas.map((rel) => (
+                    <tr key={rel.id_relatorio}>
+                        <td>{rel.matricula_bolsista}</td>
+                        <td>{rel.nome_bolsista}</td>
+                        <td>{rel.nome_bolsa}</td>
+                        <td>{new Date(rel.data_relatorio).toLocaleDateString('pt-BR')}</td>
+                        <td>{rel.status_relatorio}</td>
+                        <td>
+                            {rel.arquivo_relatorio && (
+                                <a
+                                href={`http://localhost:3001/relatorios/arquivo/${rel.arquivo_relatorio}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >
+                                Abrir PDF
+                                </a>
+                            )}
+                        </td>
+                        <td>
+                        <button className="aprovar" onClick={() => aprovarRelatorio(rel.id_relatorio)}>✔ Aprovar</button>
+                        <button className="reprovar" onClick={() => reprovarRelatorio(rel.id_relatorio)}>✖ Reprovar</button>
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+                </table>
+            )
           )}
         </div>
 
