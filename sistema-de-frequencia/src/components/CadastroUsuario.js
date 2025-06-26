@@ -9,12 +9,12 @@ function CadastroUsuario() {
     matricula: '',
     email: '',
     tipo: '',
-    bolsa: '', // Aqui será o id_bolsa selecionado
+    bolsa: '', 
     senha: '123456'
   });
   const [usuarioLogadoTipo, setUsuarioLogadoTipo] = useState('');
   const [mensagemStatus, setMensagemStatus] = useState('');
-  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); // Estado para bolsas reais
+  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); 
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
@@ -41,7 +41,7 @@ function CadastroUsuario() {
     if (tipo === 'professor') {
       setUsuario(prev => ({ ...prev, tipo: 'bolsista' }));
     }
-    fetchBolsas(); // Carrega as bolsas ao montar o componente
+    fetchBolsas(); 
   }, []);
 
   const handleChange = (e) => {
@@ -76,9 +76,7 @@ function CadastroUsuario() {
           email: usuario.email,
           senha: usuario.senha,
           tipo_usuario: usuario.tipo,
-          // Condição para enviar fk_bolsa_id: apenas se uma bolsa foi selecionada.
-          // Para Coordenador/Professor, o campo será opcional no front e pode ser null.
-          // Para Bolsista, será obrigatório e terá um valor.
+          
           fk_bolsa_id: usuario.bolsa !== '' ? parseInt(usuario.bolsa) : null,
         }),
       });
