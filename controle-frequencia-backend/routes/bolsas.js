@@ -13,9 +13,9 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel } = req.body; // Adicionado fk_usuario_matricula_responsavel
+  const { nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel } = req.body; 
   connection.query(
-    'INSERT INTO bolsa (nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel) VALUES (?, ?, ?, ?, ?)', // Adicionado fk_usuario_matricula_responsavel
+    'INSERT INTO bolsa (nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel) VALUES (?, ?, ?, ?, ?)',
     [nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel],
     (err, result) => {
       if (err) {
@@ -39,9 +39,9 @@ router.get('/:id_bolsa', (req, res) => {
 });
 
 router.put('/:id_bolsa', (req, res) => {
-  const { nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel } = req.body; // Adicionado fk_usuario_matricula_responsavel
+  const { nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel } = req.body; 
   connection.query(
-    'UPDATE bolsa SET nome_bolsa=?, tipo_bolsa=?, carga_horaria=?, frequencia_relatorio=?, fk_usuario_matricula_responsavel=? WHERE id_bolsa=?', // Adicionado fk_usuario_matricula_responsavel
+    'UPDATE bolsa SET nome_bolsa=?, tipo_bolsa=?, carga_horaria=?, frequencia_relatorio=?, fk_usuario_matricula_responsavel=? WHERE id_bolsa=?', 
     [nome_bolsa, tipo_bolsa, carga_horaria, frequencia_relatorio, fk_usuario_matricula_responsavel, req.params.id_bolsa],
     (err) => {
       if (err) {

@@ -7,15 +7,14 @@ function FrequenciaBolsista() {
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  // Mock inicial (futuramente será com fetch)
+ 
   const [presencas, setPresencas] = useState([]);
   const horasCumpridas = 78;
   const cargaHoraria = 100;
   const percentual = Math.round((horasCumpridas / cargaHoraria) * 100);
 
   useEffect(() => {
-    // Exemplo: carregar presença do usuário autenticado
-    // fetch(`/api/presencas/${matricula}`).then(...)
+    
 
     setPresencas([]); // deixamos vazio até conectar com API
   }, []);

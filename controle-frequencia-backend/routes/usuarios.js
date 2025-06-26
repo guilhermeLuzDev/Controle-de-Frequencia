@@ -13,12 +13,12 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // NOVO: fk_bolsa_id adicionado aqui
+  
   const { nome_usuario, email, senha, tipo_usuario, matricula_usuario, fk_bolsa_id } = req.body;
 
-  // NOVO: fk_bolsa_id adicionado na query SQL e nos parâmetros
+  
   const sql = 'INSERT INTO usuario (matricula_usuario, nome_usuario, email, senha, tipo_usuario, fk_bolsa_id) VALUES (?, ?, ?, ?, ?, ?)';
-  const params = [matricula_usuario, nome_usuario, email, senha, tipo_usuario, tipo_usuario === 'bolsista' || tipo_usuario === 'professor' || tipo_usuario === 'coordenador' ? fk_bolsa_id : null]; // Lógica atualizada para todos os tipos de usuário
+  const params = [matricula_usuario, nome_usuario, email, senha, tipo_usuario, tipo_usuario === 'bolsista' || tipo_usuario === 'professor' || tipo_usuario === 'coordenador' ? fk_bolsa_id : null]; 
 
   connection.query(sql, params, (err, result) => {
     if (err) {
@@ -41,12 +41,12 @@ router.get('/:matricula_usuario', (req, res) => {
 });
 
 router.put('/:matricula_usuario', (req, res) => {
-  // NOVO: fk_bolsa_id adicionado aqui
+  
   const { nome_usuario, email, senha, tipo_usuario, fk_bolsa_id } = req.body;
   
-  // NOVO: fk_bolsa_id adicionado na query SQL e nos parâmetros
+ 
   const sql = 'UPDATE usuario SET nome_usuario=?, email=?, senha=?, tipo_usuario=?, fk_bolsa_id=? WHERE matricula_usuario=?';
-  const params = [nome_usuario, email, senha, tipo_usuario, tipo_usuario === 'bolsista' || tipo_usuario === 'professor' || tipo_usuario === 'coordenador' ? fk_bolsa_id : null, req.params.matricula_usuario]; // Lógica atualizada para todos os tipos de usuário
+  const params = [nome_usuario, email, senha, tipo_usuario, tipo_usuario === 'bolsista' || tipo_usuario === 'professor' || tipo_usuario === 'coordenador' ? fk_bolsa_id : null, req.params.matricula_usuario]; 
 
   connection.query(sql, params, (err) => {
     if (err) {
@@ -67,7 +67,7 @@ router.delete('/:matricula_usuario', (req, res) => {
   });
 });
 
-// NOVA ROTA: GET (listar bolsistas vinculados a um professor responsável)
+
 router.get('/por-professor/:matricula_professor_responsavel', (req, res) => {
   const matriculaProfessorResponsavel = req.params.matricula_professor_responsavel;
 
@@ -95,9 +95,8 @@ router.get('/por-professor/:matricula_professor_responsavel', (req, res) => {
   });
 });
 
-// Adicione esta nova rota ANTES do `module.exports = router;` final
 
-// GET (listar bolsistas vinculados a uma bolsa específica)
+
 router.get('/por-bolsa/:id_bolsa', (req, res) => {
   const idBolsa = req.params.id_bolsa;
 

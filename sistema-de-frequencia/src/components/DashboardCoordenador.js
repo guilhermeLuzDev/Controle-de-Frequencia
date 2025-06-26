@@ -15,7 +15,7 @@ function DashboardCoordenador() {
   // Estados para dados reais do backend
   const [professoresDisponiveis, setProfessoresDisponiveis] = useState([]);
   const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]);
-  const [bolsistasDaBolsa, setBolsistasDaBolsa] = useState({}); // NOVO: Para armazenar bolsistas de cada bolsa aberta
+  const [bolsistasDaBolsa, setBolsistasDaBolsa] = useState({}); 
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
@@ -86,13 +86,13 @@ function DashboardCoordenador() {
     fetchBolsas();
   }, []);
 
-  // FUNÇÃO ATUALIZADA: Para buscar bolsistas da bolsa clicada
+  // Para buscar bolsistas da bolsa clicada
   const toggleBolsa = async (idBolsa) => {
     // Primeiro, alternar o estado de visibilidade da bolsa
     setBolsasAtivas(prev => ({ ...prev, [idBolsa]: !prev[idBolsa] }));
 
     // Se a bolsa estiver sendo ativada e ainda não tivermos os bolsistas
-    if (!bolsasAtivas[idBolsa]) { // Verifica o estado ANTERIOR, pois ele está sendo invertido acima
+    if (!bolsasAtivas[idBolsa]) {
       try {
         const response = await fetch(`http://localhost:3001/usuarios/por-bolsa/${idBolsa}`);
         if (response.ok) {
@@ -188,14 +188,14 @@ function DashboardCoordenador() {
                 </button>
 
                 {bolsasAtivas[bolsa.id_bolsa] && (
-                  // NOVO: Exibir bolsistas vinculados à esta bolsa
+                  // Exibir bolsistas vinculados à esta bolsa
                   <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
                     {bolsistasDaBolsa[bolsa.id_bolsa] && bolsistasDaBolsa[bolsa.id_bolsa].length > 0 ? (
                       <ul className="lista-bolsistas">
                         {bolsistasDaBolsa[bolsa.id_bolsa].map((bolsista) => (
                           <li key={bolsista.matricula_usuario}>
                             <strong>{bolsista.nome_usuario}</strong> — {bolsista.matricula_usuario}
-                            {/* Você pode adicionar status ou frequência aqui se tiver esses dados na busca */}
+                            
                           </li>
                         ))}
                       </ul>

@@ -13,8 +13,7 @@ function PresencasProfessor() {
   useEffect(() => {
     // Exemplo de como será futuramente:
     // fetch(`http://localhost:3001/professor/bolsistas/${matriculaProfessor}`)
-    //   .then(res => res.json())
-    //   .then(data => setPresencas(data));
+    
 
     setPresencas([]); // Iniciar vazio por enquanto
   }, []);

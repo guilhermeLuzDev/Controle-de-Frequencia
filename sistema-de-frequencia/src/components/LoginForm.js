@@ -35,10 +35,10 @@ function LoginForm() {
         return
       }
 
-      // NOVO: Salvar nome_usuario, matricula_usuario e tipo_usuario no localStorage
+      //Salvar nome_usuario, matricula_usuario e tipo_usuario no localStorage
       localStorage.setItem("nome_usuario", usuario.nome_usuario)
       localStorage.setItem("matricula_usuario", usuario.matricula_usuario)
-      localStorage.setItem("tipo_usuario", usuario.tipo_usuario) // LINHA CRUCIAL ADICIONADA/CORRIGIDA!
+      localStorage.setItem("tipo_usuario", usuario.tipo_usuario) 
 
 
       if (usuario.tipo_usuario === "coordenador") {

@@ -1,7 +1,3 @@
-// =======================
-// DASHBOARD PROFESSOR
-// =======================
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardProfessor.css';
@@ -73,7 +69,7 @@ function DashboardProfessor() {
     fetchBolsistasDoProfessor();
   }, [matriculaProfessorLogado]);
 
-  // FUNÇÃO ATUALIZADA: Agora envia todos os campos necessários na atualização
+  // envia todos os campos necessários na atualização
   const aprovarRelatorio = async (relatorioParaAtualizar) => { // Recebe o objeto completo do relatório
     try {
       const response = await fetch(`http://localhost:3001/relatorios/${relatorioParaAtualizar.id_relatorio}`, {
@@ -84,9 +80,9 @@ function DashboardProfessor() {
         body: JSON.stringify({
           data_relatorio: relatorioParaAtualizar.data_relatorio, // Enviar data original
           conteudo: relatorioParaAtualizar.conteudo,           // Enviar conteúdo original
-          status_relatorio: 'aprovado',                        // NOVO STATUS
+          status_relatorio: 'aprovado',                       
           arquivo_relatorio: relatorioParaAtualizar.arquivo_relatorio, // Enviar nome do arquivo original
-          fk_usuario_matricula_usuario: relatorioParaAtualizar.fk_usuario_matricula_usuario // CRUCIAL: Enviar matrícula do bolsista
+          fk_usuario_matricula_usuario: relatorioParaAtualizar.fk_usuario_matricula_usuario // Enviar matrícula do bolsista
         }),
       });
 
@@ -103,7 +99,7 @@ function DashboardProfessor() {
     }
   };
 
-  // FUNÇÃO ATUALIZADA: Agora envia todos os campos necessários na atualização
+  // Agora envia todos os campos necessários na atualização
   const reprovarRelatorio = async (relatorioParaAtualizar) => { // Recebe o objeto completo do relatório
     const observacao = prompt("Motivo da reprovação (opcional):");
     try {
@@ -115,9 +111,9 @@ function DashboardProfessor() {
         body: JSON.stringify({
           data_relatorio: relatorioParaAtualizar.data_relatorio, // Enviar data original
           conteudo: observacao || relatorioParaAtualizar.conteudo, // Conteúdo pode ser a observação ou o original
-          status_relatorio: 'reprovado',                       // NOVO STATUS
+          status_relatorio: 'reprovado',                       
           arquivo_relatorio: relatorioParaAtualizar.arquivo_relatorio, // Enviar nome do arquivo original
-          fk_usuario_matricula_usuario: relatorioParaAtualizar.fk_usuario_matricula_usuario // CRUCIAL: Enviar matrícula do bolsista
+          fk_usuario_matricula_usuario: relatorioParaAtualizar.fk_usuario_matricula_usuario // Enviar matrícula do bolsista
         }),
       });
 
@@ -147,7 +143,7 @@ function DashboardProfessor() {
     setMensagemComunicado('');
   };
 
-  // NOVO: Função auxiliar para determinar a classe do status (copiada do Dashboard.js)
+  // Função auxiliar para determinar a classe do status
   const getStatusClass = (status) => {
     switch (status) {
       case 'aprovado':
@@ -227,7 +223,7 @@ function DashboardProfessor() {
                         <td>{rel.nome_bolsista}</td>
                         <td>{rel.nome_bolsa}</td>
                         <td>{new Date(rel.data_relatorio).toLocaleDateString('pt-BR')}</td>
-                        {/* NOVO: Aplica classe CSS baseada no status, como no Dashboard do bolsista */}
+                       
                         <td className={getStatusClass(rel.status_relatorio)}>
                             {rel.status_relatorio}
                         </td>
@@ -243,9 +239,9 @@ function DashboardProfessor() {
                             )}
                         </td>
                         <td>
-                        {/* FUNÇÃO ATUALIZADA: Passa o objeto rel completo */}
+                        
                         <button className="aprovar" onClick={() => aprovarRelatorio(rel)}>✔ Aprovar</button>
-                        {/* FUNÇÃO ATUALIZADA: Passa o objeto rel completo */}
+                        
                         <button className="reprovar" onClick={() => reprovarRelatorio(rel)}>✖ Reprovar</button>
                         </td>
                     </tr>

@@ -4,10 +4,10 @@ const connection = require('../db');
 const multer = require('multer');
 const path = require('path');
 
-// Configuração do multer (armazenamento de arquivos PDF)
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // pasta onde os arquivos serão salvos
+    cb(null, 'uploads/'); 
   },
   filename: (req, file, cb) => {
     const nomeFinal = Date.now() + '-' + file.originalname;
@@ -41,7 +41,7 @@ router.post('/', upload.single('arquivo'), (req, res) => {
     [data_relatorio, conteudo, status_relatorio, arquivo_relatorio, fk_usuario_matricula_usuario],
     (err, result) => {
       if (err) {
-        console.error('Erro ao inserir relatório:', err); // Log mais detalhado
+        console.error('Erro ao inserir relatório:', err); 
         return res.status(500).json({ error: err.message });
       }
       res.status(201).json({ id_relatorio: result.insertId, arquivo_relatorio });
@@ -88,7 +88,7 @@ router.get('/arquivo/:nome_arquivo', (req, res) => {
 
   res.download(caminhoArquivo, (err) => {
     if (err) {
-      console.error('Erro ao baixar arquivo:', err); // Log mais detalhado
+      console.error('Erro ao baixar arquivo:', err); 
       // Se o arquivo não for encontrado ou houver outro erro, envie um 404
       if (err.code === 'ENOENT') {
         return res.status(404).json({ error: 'Arquivo não encontrado.' });
@@ -107,7 +107,7 @@ router.put('/:id_relatorio', (req, res) => {
     [data_relatorio, conteudo, status_relatorio, arquivo_relatorio, fk_usuario_matricula_usuario, req.params.id_relatorio],
     (err) => {
       if (err) {
-        console.error('Erro ao atualizar relatório:', err); // Log mais detalhado
+        console.error('Erro ao atualizar relatório:', err); 
         return res.status(500).json({ error: err.message });
       }
       res.json({ id_relatorio: req.params.id_relatorio, ...req.body });
@@ -119,14 +119,14 @@ router.put('/:id_relatorio', (req, res) => {
 router.delete('/:id_relatorio', (req, res) => {
   connection.query('DELETE FROM relatorio WHERE id_relatorio = ?', [req.params.id_relatorio], (err) => {
     if (err) {
-      console.error('Erro ao deletar relatório:', err); // Log mais detalhado
+      console.error('Erro ao deletar relatório:', err); 
       return res.status(500).json({ error: err.message });
     }
     res.status(204).send();
   });
 });
 
-// NOVA ROTA: GET (listar relatórios por matrícula de professor responsável)
+// GET (listar relatórios por matrícula de professor responsável)
 router.get('/por-professor/:matricula_professor', (req, res) => {
   const matriculaProfessor = req.params.matricula_professor;
 

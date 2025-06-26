@@ -14,12 +14,12 @@ function CadastroUsuario() {
   });
   const [usuarioLogadoTipo, setUsuarioLogadoTipo] = useState('');
   const [mensagemStatus, setMensagemStatus] = useState('');
-  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); // NOVO: Estado para bolsas reais
+  const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]); // Estado para bolsas reais
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  // NOVO: Função para buscar bolsas do backend
+  // Função para buscar bolsas do backend
   const fetchBolsas = async () => {
     try {
       const response = await fetch('http://localhost:3001/bolsas');
@@ -41,7 +41,7 @@ function CadastroUsuario() {
     if (tipo === 'professor') {
       setUsuario(prev => ({ ...prev, tipo: 'bolsista' }));
     }
-    fetchBolsas(); // NOVO: Carrega as bolsas ao montar o componente
+    fetchBolsas(); // Carrega as bolsas ao montar o componente
   }, []);
 
   const handleChange = (e) => {
@@ -58,7 +58,7 @@ function CadastroUsuario() {
         return;
     }
 
-    // NOVO: Validação adicional para a bolsa baseada no tipo de usuário
+    // Validação adicional para a bolsa baseada no tipo de usuário
     if (usuario.tipo === 'bolsista' && usuario.bolsa === '') {
         setMensagemStatus('Bolsistas devem ser vinculados a uma bolsa.');
         return;
@@ -159,7 +159,7 @@ function CadastroUsuario() {
             <option value="bolsista">Bolsista</option>
           </select>
 
-          {/* NOVO: Tornar o campo de bolsa opcional para Coordenador/Professor */}
+          {/* Tornar o campo de bolsa opcional para Coordenador/Professor */}
           {/* Ele será visível para todos, mas a validação 'required' será condicional */}
           <>
             <label>Bolsa vinculada:</label>

@@ -23,9 +23,9 @@ function Dashboard() {
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
 
-  const nomeBolsa = "Partiu IF"; // Isso deve vir do backend ou do contexto do usuário logado
-  const cargaHorariaTotal = 100; // Isso deve vir do backend ou do contexto do usuário logado
-  const horasCumpridas = 78; // Isso deve vir do backend ou do contexto do usuário logado
+  const nomeBolsa = "Partiu IF"; 
+  const cargaHorariaTotal = 100; 
+  const horasCumpridas = 78; 
   const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100);
   const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário";
   const matriculaUsuario = localStorage.getItem("matricula_usuario");
@@ -269,7 +269,7 @@ function Dashboard() {
                     {historicoRelatorios.map((relatorio) => (
                       <tr key={relatorio.id_relatorio}>
                         <td>{new Date(relatorio.data_relatorio).toLocaleDateString('pt-BR')}</td>
-                        {/* NOVO: Aplica classe CSS baseada no status */}
+                        {/* Aplica classe CSS baseada no status */}
                         <td className={getStatusClass(relatorio.status_relatorio)}>
                           {relatorio.status_relatorio}
                         </td>
