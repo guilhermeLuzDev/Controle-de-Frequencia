@@ -43,18 +43,41 @@ function Dashboard() {
     },
   ];
 
-  const enviarRelatorio = () => {
-    if (!arquivo) {
-      setMensagemEnvio("Por favor, selecione um arquivo PDF.");
-      return;
+const enviarRelatorio = async () => {
+  if (!arquivo) {
+    setMensagemEnvio("Por favor, selecione um arquivo PDF.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("arquivo", arquivo);
+  formData.append("data_relatorio", new Date().toISOString().split("T")[0]);
+  formData.append("conteudo", "Relatório enviado pelo sistema");
+  formData.append("status_relatorio", "pendente");
+  formData.append("fk_usuario_matricula_usuario", "20242TADS2-JG0069"); // ⚠️ Pegue do login depois
+
+  try {
+    const response = await fetch("http://localhost:3001/relatorios", {
+      method: "POST",
+      body: formData, // não definir headers, o browser define para FormData
+    });
+
+    if (response.ok) {
+      setMensagemEnvio("Relatório enviado com sucesso!");
+      setArquivo(null);
+    } else {
+      const erro = await response.json();
+      setMensagemEnvio(`Erro ao enviar: ${erro.error}`);
     }
+  } catch (error) {
+    console.error("Erro ao enviar:", error);
+    setMensagemEnvio("Erro de conexão com o servidor.");
+  }
 
-    console.log("Arquivo enviado:", arquivo.name);
-    setMensagemEnvio("Relatório enviado com sucesso!");
-    setArquivo(null);
+  setTimeout(() => setMensagemEnvio(""), 5000);
+};
 
-    setTimeout(() => setMensagemEnvio(""), 4000);
-  };
+
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimateProgress(true), 500);
