@@ -4,6 +4,79 @@ Este é um sistema web desenvolvido para gerenciar o controle de frequência de 
 
 ## 🚀 Funcionalidades
 
+- **Autenticação de usuários**
+- **Controle de frequência de bolsistas**
+- **Dashboard para diferentes perfis (Professor, Coordenador)**
+- **Relatórios de frequência**
+- **Gestão de bolsas**
+
+## 🛠️ Tecnologias Utilizadas
+
+### Backend
+- Node.js
+- Express.js
+- MySQL
+- CORS
+
+### Frontend
+- React.js
+- CSS3
+- JavaScript ES6+
+
+## 📁 Estrutura do Projeto
+
+```
+front/
+├── controle-frequencia-backend/    # Backend em Node.js/Express
+│   ├── app.js                      # Configuração principal do servidor
+│   ├── db.js                       # Configuração do banco de dados
+│   ├── routes/                     # Definição das rotas da API
+│   └── package.json
+└── sistema-de-frequencia/          # Frontend em React
+    ├── src/
+    │   ├── components/             # Componentes React
+    │   ├── App.js                  # Componente principal
+    │   └── index.js                # Ponto de entrada
+    └── package.json
+```
+
+## 🚀 Como Executar
+
+### Backend
+```bash
+cd controle-frequencia-backend
+npm install
+node app.js
+```
+
+### Frontend
+```bash
+cd sistema-de-frequencia
+npm install
+npm start
+```
+
+## 📋 Rotas da API
+
+### Usuários
+- `GET /usuarios` - Listar todos os usuários
+- `POST /usuarios` - Criar novo usuário
+- `GET /usuarios/:matricula` - Buscar usuário por matrícula
+- `PUT /usuarios/:matricula` - Atualizar usuário
+- `DELETE /usuarios/:matricula` - Deletar usuário
+
+### Frequência
+- `GET /frequencia` - Listar registros de frequência
+- `POST /frequencia` - Registrar nova frequência
+
+### Relatórios
+- `GET /relatorios` - Gerar relatórios de frequência
+
+### Bolsas
+- `GET /bolsas` - Listar bolsas disponíveis
+
+## 📋 Funcionalidades
+
 ### Para Coordenadores
 - Visualização geral de todas as bolsas ativas
 - Cadastro de novas bolsas
@@ -20,19 +93,6 @@ Este é um sistema web desenvolvido para gerenciar o controle de frequência de 
 - Registro de frequência
 - Visualização de comunicados
 - Acesso aos relatórios
-
-## 💻 Tecnologias Utilizadas
-
-- Frontend:
-  - React.js
-  - CSS para estilização
-  - React Router para navegação
-  - Lucide React para ícones
-
-- Backend:
-  - Node.js
-  - Express.js
-  - Sistema de banco de dados (MongoDB/MySQL)
 
 ## 🛠️ Instalação e Configuração
 

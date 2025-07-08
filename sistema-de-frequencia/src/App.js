@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import CadastroUsuario from './components/CadastroUsuario';
 import PresencasProfessor from './components/PresencasProfessor';
 import FrequenciaBolsista from './components/FrequenciaBolsista';
+import ControleFrequencia from './components/ControleFrequencia';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/cadastro-usuario" element={<CadastroUsuario/>} />
       <Route path="/presencas" element={<PresencasProfessor />} />
       <Route path="/frequencia" element={<FrequenciaBolsista />} />
+      <Route path="/controle-frequencia" element={<ControleFrequencia />} />
     </Routes>
   );
 }

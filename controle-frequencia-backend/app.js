@@ -11,7 +11,6 @@ app.get('/', (req, res) => {
   res.send('API funcionando!');
 });
 
-
 // Inicia o servidor
 const PORT = 3001;
 app.listen(PORT, () => {
@@ -34,4 +33,6 @@ app.use('/relatorios', relatoriosRouter);
 app.get('/exemplo', (req, res) => {
   res.send('Esta é uma rota de exemplo!');
 });
+
+module.exports = app;
 
