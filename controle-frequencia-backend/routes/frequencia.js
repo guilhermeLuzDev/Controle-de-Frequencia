@@ -87,6 +87,7 @@ router.get('/resumo/:matricula_usuario', (req, res) => {
       b.nome_bolsa,
       b.carga_horaria,
       b.tipo_bolsa,
+      (SELECT prof.nome_usuario FROM usuario prof WHERE prof.matricula_usuario = b.fk_usuario_matricula_responsavel) AS nome_professor_responsavel,
       COALESCE(SUM(CASE WHEN p.status_presenca = 'presente' THEN 1 ELSE 0 END), 0) as dias_presente,
       COALESCE(SUM(CASE WHEN p.status_presenca = 'ausente' THEN 1 ELSE 0 END), 0) as dias_ausente,
       COALESCE(SUM(CASE WHEN p.status_presenca = 'justificado' THEN 1 ELSE 0 END), 0) as dias_justificado,
@@ -95,7 +96,7 @@ router.get('/resumo/:matricula_usuario', (req, res) => {
     LEFT JOIN bolsa b ON u.fk_bolsa_id = b.id_bolsa
     LEFT JOIN presenca p ON u.matricula_usuario = p.fk_usuario_matricula_usuario
     WHERE u.matricula_usuario = ?
-    GROUP BY u.matricula_usuario, u.nome_usuario, b.id_bolsa, b.nome_bolsa, b.carga_horaria, b.tipo_bolsa
+    GROUP BY u.matricula_usuario, u.nome_usuario, b.id_bolsa, b.nome_bolsa, b.carga_horaria, b.tipo_bolsa, b.fk_usuario_matricula_responsavel
   `;
   
   console.log('Executando SQL:', sql);

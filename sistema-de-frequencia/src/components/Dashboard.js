@@ -6,10 +6,8 @@ import {
   Menu,
   Award,
   Clock,
-  TrendingUp,
   Bell,
   Upload,
-  Calendar,
   BarChart3,
   FileText,
   Target,
@@ -23,16 +21,40 @@ function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const [animateProgress, setAnimateProgress] = useState(false)
   const [historicoRelatorios, setHistoricoRelatorios] = useState([])
+  const [resumo, setResumo] = useState(null)
+  const [loadingResumo, setLoadingResumo] = useState(true)
+  const [erroResumo, setErroResumo] = useState(null)
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible)
   const closeSidebar = () => setSidebarVisible(false)
 
-  const nomeBolsa = "Partiu IF"
-  const cargaHorariaTotal = 100
-  const horasCumpridas = 78
-  const percentual = Math.round((horasCumpridas / cargaHorariaTotal) * 100)
   const nomeUsuario = localStorage.getItem("nome_usuario") || "Usuário"
   const matriculaUsuario = localStorage.getItem("matricula_usuario")
+
+  // Buscar resumo da bolsa e frequência
+  useEffect(() => {
+    const carregarResumo = async () => {
+      if (!matriculaUsuario) {
+        setErroResumo("Usuário não identificado")
+        setLoadingResumo(false)
+        return
+      }
+      try {
+        setLoadingResumo(true)
+        const resumoResponse = await fetch(`http://localhost:3001/frequencia/resumo/${matriculaUsuario}`)
+        if (!resumoResponse.ok) {
+          throw new Error("Erro ao carregar resumo da bolsa")
+        }
+        const resumoData = await resumoResponse.json()
+        setResumo(resumoData)
+      } catch (err) {
+        setErroResumo(err.message)
+      } finally {
+        setLoadingResumo(false)
+      }
+    }
+    carregarResumo()
+  }, [matriculaUsuario])
 
   const comunicados = [
     {
@@ -128,6 +150,12 @@ function Dashboard() {
     }
   }
 
+  // Dados reais vindos do backend
+  const nomeBolsa = resumo?.nome_bolsa || "Não informado"
+  const cargaHorariaTotal = resumo?.carga_horaria || 0
+  const horasCumpridas = resumo?.horas_cumpridas || 0
+  const percentual = resumo?.percentual || 0
+
   return (
     <div className="dashboard-container">
       <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="bolsista" />
@@ -153,173 +181,175 @@ function Dashboard() {
             </div>
           </div>
 
-          <div className="metrics-grid">
-            <div className="metric-card primary">
-              <div className="metric-icon">
-                <Award />
-              </div>
-              <div className="metric-content">
-                <h3>{nomeBolsa}</h3>
-                <p>Programa Ativo</p>
-              </div>
+          {loadingResumo ? (
+            <div className="card" style={{ textAlign: 'center', padding: 40 }}>
+              <span className="loading">Carregando informações da bolsa...</span>
             </div>
-
-            <div className="metric-card secondary">
-              <div className="metric-icon">
-                <Clock />
-              </div>
-              <div className="metric-content">
-                <h3>{cargaHorariaTotal}h</h3>
-                <p>Carga Total</p>
-              </div>
+          ) : erroResumo ? (
+            <div className="card error" style={{ textAlign: 'center', padding: 40 }}>
+              <span>Erro: {erroResumo}</span>
             </div>
-
-            <div className="metric-card success">
-              <div className="metric-icon">
-                <Activity />
-              </div>
-              <div className="metric-content">
-                <h3>{horasCumpridas}h</h3>
-                <p>Horas Cumpridas</p>
-              </div>
-            </div>
-
-            <div className="metric-card info">
-              <div className="metric-icon">
-                <TrendingUp />
-              </div>
-              <div className="metric-content">
-                <h3>{percentual}%</h3>
-                <p>Progresso</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="content-grid">
-            <div className="progress-section">
-              <div className="card progress-card">
-                <div className="card-header">
-                  <div className="header-content">
-                    <BarChart3 className="header-icon" />
-                    <h3>Progresso da Frequência</h3>
+          ) : (
+            <>
+              <div className="metrics-grid">
+                <div className="metric-card primary">
+                  <div className="metric-icon">
+                    <Award />
+                  </div>
+                  <div className="metric-content">
+                    <h3>{nomeBolsa}</h3>
+                    <p>Programa Ativo</p>
                   </div>
                 </div>
-                <div className="progress-content">
-                  <div className="circular-progress">
-                    <svg viewBox="0 0 36 36" className="circular-chart">
-                      <path
-                        className="circle-bg"
-                        d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className={`circle ${animateProgress ? "animate" : ""}`}
-                        d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831"
-                        strokeDasharray={`${animateProgress ? percentual : 0}, 100`}
-                      />
-                    </svg>
-                    <div className="percentage">
-                      <span className="number">{animateProgress ? percentual : 0}%</span>
-                    </div>
+
+                <div className="metric-card secondary">
+                  <div className="metric-icon">
+                    <Clock />
                   </div>
-                  <div className="progress-details">
-                    <div className="progress-info">
-                      <span className="hours-completed">{horasCumpridas}h</span>
-                      <span className="hours-total">de {cargaHorariaTotal}h</span>
-                    </div>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: animateProgress ? `${percentual}%` : "0%" }}></div>
-                    </div>
+                  <div className="metric-content">
+                    <h3>{cargaHorariaTotal}h</h3>
+                    <p>Carga Total</p>
+                  </div>
+                </div>
+
+                <div className="metric-card success">
+                  <div className="metric-icon">
+                    <Activity />
+                  </div>
+                  <div className="metric-content">
+                    <h3>{horasCumpridas}h</h3>
+                    <p>Horas Cumpridas</p>
                   </div>
                 </div>
               </div>
 
-              <div className="card upload-card">
-                <div className="card-header">
-                  <div className="header-content">
-                    <Upload className="header-icon" />
-                    <h3>Enviar Relatório</h3>
-                  </div>
-                </div>
-                <div className="upload-content">
-                  <div className="file-input-wrapper">
-                    <input type="file" accept=".pdf" onChange={(e) => setArquivo(e.target.files[0])} id="file-input" />
-                    <label htmlFor="file-input" className="file-label">
-                      {arquivo ? arquivo.name : "Escolher arquivo PDF"}
-                    </label>
-                  </div>
-                  <button className="upload-btn" onClick={enviarRelatorio}>
-                    Enviar Relatório
-                  </button>
-                  {mensagemEnvio && <p className="upload-message">{mensagemEnvio}</p>}
-                </div>
-              </div>
-            </div>
-
-            <div className="info-section">
-              <div className="card comunicados-card">
-                <div className="card-header">
-                  <div className="header-content">
-                    <Bell className="header-icon" />
-                    <h3>Comunicados</h3>
-                    <span className="badge">{comunicados.length}</span>
-                  </div>
-                </div>
-                <div className="comunicados-list">
-                  {comunicados.map((c, i) => (
-                    <div key={i} className={`comunicado-item ${c.tipo}`}>
-                      <div className="comunicado-header">
-                        <h4>{c.titulo}</h4>
-                        <span className="comunicado-data">{c.data}</span>
+              <div className="content-grid">
+                <div className="progress-section">
+                  <div className="card progress-card">
+                    <div className="card-header">
+                      <div className="header-content">
+                        <BarChart3 className="header-icon" />
+                        <h3>Progresso da Frequência</h3>
                       </div>
-                      <p>{c.mensagem}</p>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className="progress-content">
+                      <div className="circular-progress">
+                        <svg viewBox="0 0 36 36" className="circular-chart">
+                          <path
+                            className="circle-bg"
+                            d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            className={`circle ${animateProgress ? "animate" : ""}`}
+                            d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831"
+                            strokeDasharray={`${animateProgress ? percentual : 0}, 100`}
+                          />
+                        </svg>
+                        <div className="percentage">
+                          <span className="number">{animateProgress ? percentual : 0}%</span>
+                        </div>
+                      </div>
+                      <div className="progress-details">
+                        <div className="progress-info">
+                          <span className="hours-completed">{horasCumpridas}h</span>
+                          <span className="hours-total">de {cargaHorariaTotal}h</span>
+                        </div>
+                        <div className="progress-bar">
+                          <div className="progress-fill" style={{ width: animateProgress ? `${percentual}%` : "0%" }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="card historico-card">
-                <div className="card-header">
-                  <div className="header-content">
-                    <FileText className="header-icon" />
-                    <h3>Histórico de Relatórios</h3>
+                  <div className="card upload-card">
+                    <div className="card-header">
+                      <div className="header-content">
+                        <Upload className="header-icon" />
+                        <h3>Enviar Relatório</h3>
+                      </div>
+                    </div>
+                    <div className="upload-content">
+                      <div className="file-input-wrapper">
+                        <input type="file" accept=".pdf" onChange={(e) => setArquivo(e.target.files[0])} id="file-input" />
+                        <label htmlFor="file-input" className="file-label">
+                          {arquivo ? arquivo.name : "Escolher arquivo PDF"}
+                        </label>
+                      </div>
+                      <button className="upload-btn" onClick={enviarRelatorio}>
+                        Enviar Relatório
+                      </button>
+                      {mensagemEnvio && <p className="upload-message">{mensagemEnvio}</p>}
+                    </div>
                   </div>
                 </div>
-                <div className="historico-content">
-                  {historicoRelatorios.length === 0 ? (
-                    <div className="empty-state">
-                      <FileText className="empty-icon" />
-                      <p>Nenhum relatório enviado ainda</p>
+
+                <div className="info-section">
+                  <div className="card comunicados-card">
+                    <div className="card-header">
+                      <div className="header-content">
+                        <Bell className="header-icon" />
+                        <h3>Comunicados</h3>
+                        <span className="badge">{comunicados.length}</span>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="relatorios-list">
-                      {historicoRelatorios.map((relatorio) => (
-                        <div key={relatorio.id_relatorio} className="relatorio-item">
-                          <div className="relatorio-info">
-                            <span className="relatorio-date">
-                              {new Date(relatorio.data_relatorio).toLocaleDateString("pt-BR")}
-                            </span>
-                            <span className={`relatorio-status ${getStatusClass(relatorio.status_relatorio)}`}>
-                              {relatorio.status_relatorio}
-                            </span>
+                    <div className="comunicados-list">
+                      {comunicados.map((c, i) => (
+                        <div key={i} className={`comunicado-item ${c.tipo}`}>
+                          <div className="comunicado-header">
+                            <h4>{c.titulo}</h4>
+                            <span className="comunicado-data">{c.data}</span>
                           </div>
-                          {relatorio.arquivo_relatorio && (
-                            <a
-                              href={`http://localhost:3001/relatorios/arquivo/${relatorio.arquivo_relatorio}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="view-link"
-                            >
-                              Ver PDF
-                            </a>
-                          )}
+                          <p>{c.mensagem}</p>
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
+
+                  <div className="card historico-card">
+                    <div className="card-header">
+                      <div className="header-content">
+                        <FileText className="header-icon" />
+                        <h3>Histórico de Relatórios</h3>
+                      </div>
+                    </div>
+                    <div className="historico-content">
+                      {historicoRelatorios.length === 0 ? (
+                        <div className="empty-state">
+                          <FileText className="empty-icon" />
+                          <p>Nenhum relatório enviado ainda</p>
+                        </div>
+                      ) : (
+                        <div className="relatorios-list">
+                          {historicoRelatorios.map((relatorio) => (
+                            <div key={relatorio.id_relatorio} className="relatorio-item">
+                              <div className="relatorio-info">
+                                <span className="relatorio-date">
+                                  {new Date(relatorio.data_relatorio).toLocaleDateString("pt-BR")}
+                                </span>
+                                <span className={`relatorio-status ${getStatusClass(relatorio.status_relatorio)}`}>
+                                  {relatorio.status_relatorio.charAt(0).toUpperCase() + relatorio.status_relatorio.slice(1)}
+                                </span>
+                              </div>
+                              {relatorio.arquivo_relatorio && (
+                                <a
+                                  href={`http://localhost:3001/relatorios/arquivo/${relatorio.arquivo_relatorio}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="view-link"
+                                >
+                                  Ver PDF
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
