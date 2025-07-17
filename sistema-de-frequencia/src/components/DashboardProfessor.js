@@ -3,32 +3,16 @@ import Sidebar from './Sidebar';
 import {
   Menu,
   FileText,
-  Plus,
-  Calendar,
-  Home,
   Users,
   Award,
   ClipboardList,
-  Bell,
-  MoreVertical,
 } from "lucide-react";
 import './Dashboard.css';
 
 function DashboardProfessor() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [mostrarRelatorios, setMostrarRelatorios] = useState(false);
-  const [mostrarComunicados, setMostrarComunicados] = useState(false);
-  const [tituloComunicado, setTituloComunicado] = useState('');
-  const [mensagemComunicado, setMensagemComunicado] = useState('');
-  const [comunicados, setComunicados] = useState([
-    { titulo: 'Reunião geral', mensagem: 'Acontecerá dia 18/06 às 14h.' },
-  ]);
   const [relatoriosBolsistas, setRelatoriosBolsistas] = useState([]);
   const [bolsistasDoProfessor, setBolsistasDoProfessor] = useState([]);
-  const [editandoComunicado, setEditandoComunicado] = useState(null);
-  const [editTitulo, setEditTitulo] = useState('');
-  const [editMensagem, setEditMensagem] = useState('');
-  const [menuAberto, setMenuAberto] = useState(null);
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
   const closeSidebar = () => setSidebarVisible(false);
@@ -128,41 +112,6 @@ function DashboardProfessor() {
     }
   };
 
-  const enviarComunicado = (e) => {
-    e.preventDefault();
-    if (!tituloComunicado || !mensagemComunicado) return;
-    setComunicados(prev => [...prev, { titulo: tituloComunicado, mensagem: mensagemComunicado }]);
-    setTituloComunicado('');
-    setMensagemComunicado('');
-  };
-
-  const definirEditar = (index) => {
-    setEditandoComunicado(index);
-    setEditTitulo(comunicados[index].titulo);
-    setEditMensagem(comunicados[index].mensagem);
-  };
-
-  const salvarEdicao = (index) => {
-    const novos = [...comunicados];
-    novos[index] = { titulo: editTitulo, mensagem: editMensagem };
-    setComunicados(novos);
-    setEditandoComunicado(null);
-  };
-
-  const cancelarEdicao = () => {
-    setEditandoComunicado(null);
-  };
-
-  const apagarComunicado = (index) => {
-    const novos = comunicados.filter((_, i) => i !== index);
-    setComunicados(novos);
-  };
-
-  // Função para abrir/fechar menu de opções do comunicado
-  const toggleMenu = (index) => {
-    setMenuAberto(menuAberto === index ? null : index);
-  };
-
   const getStatusClass = (status) => {
     switch (status) {
       case 'aprovado': return 'status-aprovado';
@@ -175,7 +124,7 @@ function DashboardProfessor() {
   return (
     <div className="dashboard-container">
       <Sidebar visible={sidebarVisible} onClose={closeSidebar} tipoUsuario="professor" />
-      <div className={`main-content ${sidebarVisible ? "sidebar-open" : ""}`}> 
+      <div className={`main-content ${sidebarVisible ? "sidebar-open" : ""}`}>
         <header className="top-header">
           <button className="menu-toggle" onClick={toggleSidebar} aria-label="Abrir menu">
             <Menu />
@@ -185,7 +134,7 @@ function DashboardProfessor() {
           <div className="welcome-section">
             <div className="welcome-text">
               <h1>Olá, {nomeUsuario}! 👋</h1>
-              <p>Acompanhe seus bolsistas, relatórios e comunicados em um só lugar</p>
+              <p>Acompanhe seus bolsistas e relatórios em um só lugar</p>
             </div>
           </div>
           <div className="metrics-grid">
@@ -203,13 +152,7 @@ function DashboardProfessor() {
                 <p>Relatórios Recebidos</p>
               </div>
             </div>
-            <div className="metric-card info">
-              <div className="metric-icon"><Bell /></div>
-              <div className="metric-content">
-                <h3>{comunicados.length}</h3>
-                <p>Comunicados</p>
-              </div>
-            </div>
+            
           </div>
           <div className="content-grid">
             <div className="progress-section">
@@ -307,97 +250,7 @@ function DashboardProfessor() {
                 </div>
               </div>
             </div>
-            <div className="info-section">
-              <div className="card comunicados-card">
-                <div className="card-header">
-                  <div className="header-content">
-                    <Bell className="header-icon" />
-                    <h3>Comunicados</h3>
-                    <span className="badge">{comunicados.length}</span>
-                  </div>
-                </div>
-                <div className="comunicados-list">
-                  <form onSubmit={enviarComunicado} style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <input
-                      type="text"
-                      placeholder="Título"
-                      value={tituloComunicado}
-                      onChange={(e) => setTituloComunicado(e.target.value)}
-                      className="file-label"
-                      style={{ marginBottom: 0 }}
-                    />
-                    <textarea
-                      placeholder="Mensagem"
-                      rows="2"
-                      value={mensagemComunicado}
-                      onChange={(e) => setMensagemComunicado(e.target.value)}
-                      className="file-label"
-                      style={{ marginBottom: 0, resize: 'vertical', minHeight: 40 }}
-                    />
-                    <button type="submit" className="upload-btn" style={{ width: 'fit-content', marginTop: 8 }}>Enviar</button>
-                  </form>
-                  {comunicados.length === 0 ? (
-                    <div className="empty-state">
-                      <p>Nenhum comunicado enviado ainda.</p>
-                    </div>
-                  ) : (
-                    comunicados.map((c, i) => (
-                      <div key={i} className="comunicado-item info" style={{ position: 'relative' }}>
-                        {editandoComunicado === i ? (
-                          <>
-                            <input
-                              type="text"
-                              value={editTitulo}
-                              onChange={e => setEditTitulo(e.target.value)}
-                              className="file-label"
-                              style={{ marginBottom: 8 }}
-                            />
-                            <textarea
-                              value={editMensagem}
-                              onChange={e => setEditMensagem(e.target.value)}
-                              className="file-label"
-                              style={{ marginBottom: 8, resize: 'vertical', minHeight: 40 }}
-                            />
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              <button className="upload-btn" style={{ padding: '6px 14px', fontSize: 14 }} onClick={() => salvarEdicao(i)}>Salvar</button>
-                              <button className="reprovar" style={{ padding: '6px 14px', fontSize: 14 }} onClick={cancelarEdicao}>Cancelar</button>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="comunicado-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                              <h4>{c.titulo}</h4>
-                              <button
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, marginLeft: 8 }}
-                                onClick={() => toggleMenu(i)}
-                                aria-label="Mais opções"
-                              >
-                                <MoreVertical size={20} />
-                              </button>
-                              {menuAberto === i && (
-                                <div style={{ position: 'absolute', right: 8, top: 36, background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', borderRadius: 8, zIndex: 10, minWidth: 100, padding: 4 }}>
-                                  <button
-                                    className="upload-btn"
-                                    style={{ width: '100%', padding: '6px 10px', fontSize: 14, borderRadius: 6, marginBottom: 2 }}
-                                    onClick={() => { definirEditar(i); setMenuAberto(null); }}
-                                  >Alterar</button>
-                                  <button
-                                    className="reprovar"
-                                    style={{ width: '100%', padding: '6px 10px', fontSize: 14, borderRadius: 6 }}
-                                    onClick={() => { apagarComunicado(i); setMenuAberto(null); }}
-                                  >Apagar</button>
-                                </div>
-                              )}
-                            </div>
-                            <p>{c.mensagem}</p>
-                          </>
-                        )}
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

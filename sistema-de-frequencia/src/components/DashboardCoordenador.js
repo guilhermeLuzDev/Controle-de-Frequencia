@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import './DashboardCoordenador.css';
-import { 
-  Menu, 
-  BookOpen, 
-  Users, 
-  GraduationCap, 
-  MessageSquare, 
-  Plus, 
-  X, 
-  ChevronDown, 
+import {
+  Menu,
+  BookOpen,
+  Users,
+  GraduationCap,
+  Plus,
+  X,
+  ChevronDown,
   ChevronRight,
   Search,
   Clock,
@@ -24,14 +23,13 @@ function DashboardCoordenador() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [bolsasAtivas, setBolsasAtivas] = useState({});
   const [mostrarCadastroBolsa, setMostrarCadastroBolsa] = useState(false);
-  const [mostrarComunicados, setMostrarComunicados] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Estados para dados reais do backend
   const [professoresDisponiveis, setProfessoresDisponiveis] = useState([]);
   const [bolsasDisponiveis, setBolsasDisponiveis] = useState([]);
-  const [bolsistasDaBolsa, setBolsistasDaBolsa] = useState({}); 
+  const [bolsistasDaBolsa, setBolsistasDaBolsa] = useState({});
   const [filtroSelecionado, setFiltroSelecionado] = useState('');
 
   const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
@@ -43,15 +41,6 @@ function DashboardCoordenador() {
     professor: '',
     cargaHoraria: '',
     relatorio: ''
-  });
-
-  const [comunicados, setComunicados] = useState([
-    { id: 1, titulo: 'Entrega de Documentos', mensagem: 'Prazo até dia 20/06.', data: new Date().toLocaleDateString() }
-  ]);
-
-  const [novoComunicado, setNovoComunicado] = useState({
-    titulo: '',
-    mensagem: ''
   });
 
   // Função para buscar professores do backend
@@ -173,27 +162,6 @@ function DashboardCoordenador() {
     }
   };
 
-  const enviarComunicado = (e) => {
-    e.preventDefault();
-    if (!novoComunicado.titulo || !novoComunicado.mensagem) return;
-    
-    const novoItem = {
-      id: Date.now(),
-      titulo: novoComunicado.titulo,
-      mensagem: novoComunicado.mensagem,
-      data: new Date().toLocaleDateString()
-    };
-    
-    setComunicados(prev => [novoItem, ...prev]);
-    setNovoComunicado({ titulo: '', mensagem: '' });
-    setMostrarComunicados(false);
-    alert('Comunicado enviado com sucesso!');
-  };
-
-  const removerComunicado = (id) => {
-    setComunicados(prev => prev.filter(c => c.id !== id));
-  };
-
   const bolsasFiltradas = filtroSelecionado
     ? bolsasDisponiveis.filter(b => b.fk_usuario_matricula_responsavel === filtroSelecionado)
     : bolsasDisponiveis;
@@ -202,7 +170,7 @@ function DashboardCoordenador() {
     const totalBolsas = bolsasDisponiveis.length;
     const totalBolsistas = Object.values(bolsistasDaBolsa).reduce((acc, bolsistas) => acc + bolsistas.length, 0);
     const totalProfessores = new Set(bolsasDisponiveis.map(b => b.fk_usuario_matricula_responsavel)).size;
-    
+
     return { totalBolsas, totalBolsistas, totalProfessores };
   };
 
@@ -248,7 +216,7 @@ function DashboardCoordenador() {
         <div className="welcome-section">
           <div className="welcome-text">
             <h1>Bem-vindo, {nomeUsuario}!</h1>
-            <p>Gerencie bolsas, professores e comunicados de forma eficiente</p>
+            <p>Gerencie bolsas e professores de forma eficiente</p>
           </div>
           <div className="welcome-stats">
             <div className="stat-badge">
@@ -300,16 +268,7 @@ function DashboardCoordenador() {
               <p>Professores Responsáveis</p>
             </div>
           </div>
-
-          <div className="metric-card info">
-            <div className="metric-icon">
-              <MessageSquare size={24} />
-            </div>
-            <div className="metric-content">
-              <h3>{comunicados.length}</h3>
-              <p>Comunicados Ativos</p>
-            </div>
-          </div>
+          {/* Comunicados Metric Card Removido */}
         </div>
 
         {/* Grid Principal */}
@@ -345,7 +304,7 @@ function DashboardCoordenador() {
                 </select>
               </div>
 
-              {/* Lista de Bolsas */}
+              
               <div className="bolsas-lista">
                 {bolsasFiltradas.length === 0 ? (
                   <div className="empty-state">
@@ -355,8 +314,8 @@ function DashboardCoordenador() {
                 ) : (
                   bolsasFiltradas.map((bolsa) => (
                     <div key={bolsa.id_bolsa} className="bolsa-card">
-                      <button 
-                        className="bolsa-header" 
+                      <button
+                        className="bolsa-header"
                         onClick={() => toggleBolsa(bolsa.id_bolsa)}
                       >
                         <div className="bolsa-info">
@@ -376,8 +335,8 @@ function DashboardCoordenador() {
                             {bolsa.carga_horaria}h
                           </span>
                           <span className="toggle-icon">
-                            {bolsasAtivas[bolsa.id_bolsa] ? 
-                              <ChevronDown size={16} /> : 
+                            {bolsasAtivas[bolsa.id_bolsa] ?
+                              <ChevronDown size={16} /> :
                               <ChevronRight size={16} />
                             }
                           </span>
@@ -410,8 +369,8 @@ function DashboardCoordenador() {
                 )}
               </div>
 
-              {/* Botão para Nova Bolsa */}
-              <button 
+              
+              <button
                 className="btn-nova-bolsa"
                 onClick={() => setMostrarCadastroBolsa(!mostrarCadastroBolsa)}
               >
@@ -421,49 +380,10 @@ function DashboardCoordenador() {
             </div>
           </div>
 
-          {/* Seção de Comunicados */}
-          <div className="card comunicados-section">
-            <div className="card-header">
-              <div className="header-content">
-                <div className="header-with-icon">
-                  <MessageSquare size={20} />
-                  <h3>Comunicados</h3>
-                </div>
-                <span className="badge">{comunicados.length} ativos</span>
-              </div>
-            </div>
-
-            <div className="card-content">
-              <button 
-                className="btn-novo-comunicado"
-                onClick={() => setMostrarComunicados(!mostrarComunicados)}
-              >
-                <Plus size={16} />
-                Novo Comunicado
-              </button>
-
-              <div className="comunicados-lista">
-                {comunicados.map((comunicado) => (
-                  <div key={comunicado.id} className="comunicado-card">
-                    <div className="comunicado-header">
-                      <h4>{comunicado.titulo}</h4>
-                      <button 
-                        className="btn-remover"
-                        onClick={() => removerComunicado(comunicado.id)}
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                    <p>{comunicado.mensagem}</p>
-                    <span className="comunicado-data">{comunicado.data}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          
         </div>
 
-        {/* Modal de Cadastro de Bolsa */}
+     
         {mostrarCadastroBolsa && (
           <div className="modal-overlay" onClick={() => setMostrarCadastroBolsa(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -472,7 +392,7 @@ function DashboardCoordenador() {
                   <Plus size={20} />
                   <h3>Cadastrar Nova Bolsa</h3>
                 </div>
-                <button 
+                <button
                   className="btn-fechar"
                   onClick={() => setMostrarCadastroBolsa(false)}
                 >
@@ -563,57 +483,7 @@ function DashboardCoordenador() {
           </div>
         )}
 
-        {/* Modal de Novo Comunicado */}
-        {mostrarComunicados && (
-          <div className="modal-overlay" onClick={() => setMostrarComunicados(false)}>
-            <div className="modal-content modal-comunicado" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <div className="header-with-icon">
-                  <MessageSquare size={20} />
-                  <h3>Novo Comunicado</h3>
-                </div>
-                <button 
-                  className="btn-fechar"
-                  onClick={() => setMostrarComunicados(false)}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <form className="modal-form" onSubmit={enviarComunicado}>
-                <div className="form-group">
-                  <label>Título:</label>
-                  <input
-                    type="text"
-                    value={novoComunicado.titulo}
-                    onChange={(e) => setNovoComunicado({ ...novoComunicado, titulo: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Mensagem:</label>
-                  <textarea
-                    rows="4"
-                    value={novoComunicado.mensagem}
-                    onChange={(e) => setNovoComunicado({ ...novoComunicado, mensagem: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="modal-actions">
-                  <button type="button" className="btn-cancelar" onClick={() => setMostrarComunicados(false)}>
-                    Cancelar
-                  </button>
-                  <button type="submit" className="btn-enviar">
-                    <MessageSquare size={16} />
-                    Enviar Comunicado
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+        
       </div>
     </div>
   );

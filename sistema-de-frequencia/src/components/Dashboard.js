@@ -6,7 +6,6 @@ import {
   Menu,
   Award,
   Clock,
-  Bell,
   Upload,
   BarChart3,
   FileText,
@@ -55,21 +54,6 @@ function Dashboard() {
     }
     carregarResumo()
   }, [matriculaUsuario])
-
-  const comunicados = [
-    {
-      titulo: "Entrega de Relatório",
-      mensagem: "Não esquecer de enviar até dia 20/06",
-      tipo: "urgente",
-      data: "20/06",
-    },
-    {
-      titulo: "Presença obrigatória",
-      mensagem: "Reunião dia 18/06 com todos os bolsistas",
-      tipo: "importante",
-      data: "18/06",
-    },
-  ]
 
   const enviarRelatorio = async () => {
     if (!arquivo) {
@@ -284,27 +268,7 @@ function Dashboard() {
                 </div>
 
                 <div className="info-section">
-                  <div className="card comunicados-card">
-                    <div className="card-header">
-                      <div className="header-content">
-                        <Bell className="header-icon" />
-                        <h3>Comunicados</h3>
-                        <span className="badge">{comunicados.length}</span>
-                      </div>
-                    </div>
-                    <div className="comunicados-list">
-                      {comunicados.map((c, i) => (
-                        <div key={i} className={`comunicado-item ${c.tipo}`}>
-                          <div className="comunicado-header">
-                            <h4>{c.titulo}</h4>
-                            <span className="comunicado-data">{c.data}</span>
-                          </div>
-                          <p>{c.mensagem}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
+                  {/* Bloco de comunicados removido */}
                   <div className="card historico-card">
                     <div className="card-header">
                       <div className="header-content">

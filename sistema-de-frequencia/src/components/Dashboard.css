@@ -411,6 +411,8 @@
   text-align: center;
 }
 
+/* --- ESTILOS DE COMUNICADOS REMOVIDOS --- */
+/*
 .comunicados-list {
   padding: 0 24px 24px 24px;
   display: flex;
@@ -463,6 +465,9 @@
   font-size: 14px;
   line-height: 1.5;
 }
+*/
+/* --- FIM DOS ESTILOS DE COMUNICADOS REMOVIDOS --- */
+
 
 .historico-content {
   padding: 0 24px 24px 24px;

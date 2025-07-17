@@ -277,6 +277,7 @@
 .empty-state {
   text-align: center;
   padding: 40px;
+  font-size: 1.1em;
   color: #64748b;
   display: flex;
   flex-direction: column;
@@ -425,7 +426,7 @@
 
 /* Botões de Ação */
 .btn-nova-bolsa,
-.btn-novo-comunicado {
+.btn-novo-comunicado { /* btn-novo-comunicado será removido do código, mas deixado no CSS por enquanto */
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
   border: none;
@@ -446,7 +447,8 @@
   box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
 }
 
-/* Comunicados */
+/* --- ESTILOS DE COMUNICADOS REMOVIDOS --- */
+/*
 .comunicados-lista {
   margin-top: 24px;
 }
@@ -504,6 +506,9 @@
   color: #64748b;
   font-size: 12px;
 }
+*/
+/* --- FIM DOS ESTILOS DE COMUNICADOS REMOVIDOS --- */
+
 
 /* Modais */
 .modal-overlay {
@@ -530,9 +535,11 @@
   overflow-y: auto;
 }
 
+/*
 .modal-comunicado {
   max-width: 400px;
 }
+*/
 
 .modal-header {
   padding: 24px;
@@ -641,7 +648,7 @@
 }
 
 .btn-cadastrar,
-.btn-enviar {
+.btn-enviar { /* btn-enviar será removido do código, mas deixado no CSS por enquanto */
   padding: 12px 24px;
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;

@@ -28,74 +28,108 @@ h2 {
   margin-bottom: 10px;
 }
 
-.tabela-programas {
-  background-color: #f3f3f3;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+/* Estilização da tabela de Relatórios */
+.relatorios-table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 20px;
-  overflow-x: auto;
+  background-color: #f9f9f9; /* Fundo claro para a tabela */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  overflow: hidden; /* Garante que o border-radius seja aplicado */
 }
 
-.tabela-programas table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tabela-programas th,
-.tabela-programas td {
-  padding: 10px 14px;
-  border-bottom: 1px solid #ccc;
+.relatorios-table th,
+.relatorios-table td {
+  padding: 12px 16px; /* Aumenta o espaçamento interno */
+  border-bottom: 1px solid #e0e0e0; /* Linhas mais claras */
   text-align: left;
 }
 
-.aba {
-  margin-top: 30px;
+.relatorios-table th {
+  background-color: #eef7ee; /* Fundo verde bem claro para o cabeçalho */
+  color: #2e7d32; /* Cor do texto mais escura para contraste */
+  font-weight: 600; /* Texto mais negrito */
+  text-transform: uppercase; /* Transforma em maiúsculas */
+  font-size: 0.85em; /* Fonte um pouco menor */
 }
 
-.botao {
-  background-color: #2e7d32;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
+.relatorios-table tbody tr:hover {
+  background-color: #e8f5e8; /* Fundo verde suave ao passar o mouse */
 }
 
-.subtabela {
-  margin-top: 10px;
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #f9f9f9;
-}
-
-.subtabela th,
-.subtabela td {
-  padding: 10px;
-  border: 1px solid #ccc;
-  text-align: left;
-}
-
+/* Botões de Ação na Tabela */
 .aprovar {
-  background-color: #2e7d32;
+  background-color: #28a745; /* Verde Bootstrap de sucesso */
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  margin-right: 6px;
+  padding: 8px 14px; /* Bom espaçamento */
+  border-radius: 5px;
+  margin-right: 8px; /* Espaço entre os botões */
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap; /* Evita que o texto quebre */
+}
+
+.aprovar:hover {
+  background-color: #218838; /* Tom mais escuro no hover */
+  transform: translateY(-1px); /* Efeito de leve elevação */
 }
 
 .reprovar {
-  background-color: #c62828;
+  background-color: #dc3545; /* Vermelho Bootstrap de perigo */
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 5px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap; /* Evita que o texto quebre */
 }
 
+.reprovar:hover {
+  background-color: #c82333; /* Tom mais escuro no hover */
+  transform: translateY(-1px);
+}
+
+/* Classes para o Status do Relatório (Aprimoradas) */
+.status-aprovado {
+  color: #1a5c2f; /* Verde escuro para texto */
+  font-weight: bold;
+  background-color: #d4edda; /* Fundo verde claro */
+  padding: 6px 12px; /* Mais padding */
+  border-radius: 20px; /* Formato de pílula */
+  display: inline-block;
+  min-width: 90px; /* Largura mínima para uniformidade */
+  text-align: center;
+}
+
+.status-reprovado {
+  color: #8c2a38; /* Vermelho escuro para texto */
+  font-weight: bold;
+  background-color: #f8d7da; /* Fundo vermelho claro */
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  min-width: 90px;
+  text-align: center;
+}
+
+.status-pendente {
+  color: #926b00; /* Laranja escuro para texto */
+  font-weight: bold;
+  background-color: #fff3cd; /* Fundo amarelo claro */
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* --- ESTILOS DE COMUNICADOS REMOVIDOS (DEIXADOS COMENTADOS PARA REFERÊNCIA) --- */
+/*
 .comunicado-form {
   margin-top: 15px;
   background-color: #f3f3f3;
@@ -131,31 +165,5 @@ h2 {
 .lista-comunicados li {
   margin-bottom: 10px;
 }
-
-/* Classes para o Status do Relatório */
-.status-aprovado {
-  color: #2e7d32; /* Verde forte */
-  font-weight: bold;
-  background-color: #e8f5e8; /* Fundo verde claro */
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: inline-block;
-}
-
-.status-reprovado {
-  color: #c62828; /* Vermelho forte */
-  font-weight: bold;
-  background-color: #ffebee; /* Fundo vermelho claro */
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: inline-block;
-}
-
-.status-pendente {
-  color: #ffa000; /* Laranja/Amarelo forte */
-  font-weight: bold;
-  background-color: #fff8e1; /* Fundo amarelo claro */
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: inline-block;
-}
+*/
+/* --- FIM DOS ESTILOS DE COMUNICADOS REMOVIDOS --- */
