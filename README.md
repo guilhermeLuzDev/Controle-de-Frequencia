@@ -2,9 +2,9 @@
 
 > Sistema web desenvolvido para gerenciar o controle de frequência de bolsistas no Instituto Federal de Pernambuco - Campus Jaboatão dos Guararapes.
 
-[![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React-19+-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-16+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-4+-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![Express](https://img.shields.io/badge/Express-5+-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-8+-4479A1?logo=mysql&logoColor=white)](https://mysql.com/)
 
 ## 🎯 Visão Geral
@@ -24,23 +24,27 @@ Sistema completo para gestão de bolsistas acadêmicos com três níveis de aces
 - **Bolsistas**: Acesso às suas informações
 
 ### 📊 Controle de Frequência
-- Registro de presença diária
+- Registro de presença diária pelos professores
 - Status: Presente, Ausente, Justificado
-- Histórico completo de frequência
-- Cálculo automático de percentual
-- Filtros por data e status
+- Histórico completo de frequência por bolsista
+- Cálculo automático de percentual de presença
+- Filtros por data, status e bolsista
+- Visualização de estatísticas de presença
 
 ### 🎓 Gestão de Bolsas
-- Cadastro e gerenciamento de bolsas
+- Cadastro e gerenciamento de bolsas pelo coordenador
+- Tipos de bolsa: Monitoria, Tutoria de Pares, Iniciação Científica
 - Vinculação de bolsistas às bolsas
 - Controle de carga horária
 - Acompanhamento por professor responsável
+- Configuração de frequência de relatórios
 
 ### 📋 Sistema de Relatórios
-- Upload de relatórios em PDF
+- Upload de relatórios em PDF pelos bolsistas
 - Histórico de relatórios por bolsista
 - Download de arquivos
-- Controle de status dos relatórios
+- Controle de status dos relatórios (pendente, aprovado, reprovado)
+- Acompanhamento por professores responsáveis
 
 ## 🏗️ Arquitetura do Sistema
 
@@ -69,9 +73,9 @@ sistema-de-frequencia/
 │   │   ├── DashboardCoordenador.js # Dashboard de coordenadores
 │   │   ├── DashboardProfessor.js  # Dashboard de professores
 │   │   ├── CadastroUsuario.js     # Cadastro de usuários
-│   │   ├── ControleFrequencia.js  # Controle de frequência
-│   │   ├── FrequenciaBolsista.js  # Visualização de frequência
-│   │   ├── PresencasProfessor.js  # Gestão de presenças
+│   │   ├── ControleFrequencia.js  # Controle de frequência por professores
+│   │   ├── FrequenciaBolsista.js  # Visualização de frequência por bolsistas
+│   │   ├── PresencasProfessor.js  # Gestão de presenças (legado)
 │   │   └── Sidebar.js             # Navegação lateral
 │   ├── App.js             # Componente principal e rotas
 │   └── index.js
@@ -82,7 +86,7 @@ sistema-de-frequencia/
 
 ### Backend
 - **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
+- **Express.js 5** - Framework web
 - **MySQL2** - Driver para MySQL
 - **CORS** - Habilitação de requisições cross-origin
 - **Multer** - Upload de arquivos
@@ -91,7 +95,7 @@ sistema-de-frequencia/
 - **React 19** - Biblioteca de interface
 - **React Router DOM** - Roteamento
 - **Lucide React** - Ícones modernos
-- **CSS3** - Estilização
+- **CSS3** - Estilização responsiva
 
 ### Banco de Dados
 - **MySQL** - Sistema de gerenciamento de banco de dados
@@ -178,18 +182,20 @@ npm start
 ### 👑 Coordenador
 - **Visão geral**: Dashboard com todas as bolsas ativas
 - **Gestão completa**: Cadastro de usuários (todos os tipos)
+- **Gestão de bolsas**: Criação e administração de bolsas
 - **Monitoramento**: Acompanhamento de frequência geral
 - **Relatórios**: Acesso a todos os relatórios do sistema
 
 ### 👨‍🏫 Professor
 - **Gestão de bolsistas**: Seus bolsistas vinculados
-- **Controle de frequência**: Registro de presenças
+- **Controle de frequência**: Registro diário de presenças
 - **Cadastro limitado**: Apenas bolsistas
-- **Relatórios**: Seus bolsistas e suas atividades
+- **Relatórios**: Acompanhamento dos relatórios de seus bolsistas
+- **Dashboard personalizado**: Visão dos bolsistas sob sua responsabilidade
 
 ### 🎓 Bolsista
-- **Dashboard pessoal**: Informações da bolsa
-- **Frequência**: Visualização do histórico pessoal
+- **Dashboard pessoal**: Informações da bolsa e progresso
+- **Frequência**: Visualização do histórico pessoal de presenças
 - **Relatórios**: Upload e gestão de seus relatórios
 - **Estatísticas**: Percentual de frequência e horas cumpridas
 
@@ -207,12 +213,34 @@ npm start
 - Presenças são vinculadas a usuários
 - Relatórios são enviados por bolsistas
 
+## 🆕 Principais Funcionalidades Atualizadas
+
+### Controle de Frequência Avançado
+- Interface dedicada para professores registrarem presenças
+- Busca e seleção de bolsistas por nome
+- Histórico paginado com filtros por data e status
+- Prevenção de registros duplicados
+- Observações por registro de presença
+
+### Dashboard Interativo
+- Métricas em tempo real de bolsas, bolsistas e professores
+- Gráficos de progresso de frequência
+- Filtros dinâmicos por professor
+- Estatísticas consolidadas por perfil de usuário
+
+### Sistema de Upload Aprimorado
+- Upload exclusivo de arquivos PDF
+- Histórico visual de relatórios
+- Download direto de relatórios
+- Status de aprovação por relatório
+
 ## 🔐 Segurança e Autenticação
 
 - Controle de acesso baseado em perfil de usuário
 - Validação de permissões por endpoint
 - Armazenamento seguro de credenciais
 - Upload restrito a arquivos PDF
+- Prevenção de registros duplicados
 
 ## 📱 Interface do Usuário
 
@@ -220,6 +248,7 @@ npm start
 - **Navegação intuitiva**: Sidebar contextual por perfil
 - **Feedback visual**: Indicadores de status e carregamento
 - **Filtros avançados**: Busca e filtros em tempo real
+- **Ícones modernos**: Interface com Lucide React
 
 ## 🚀 Scripts Disponíveis
 
